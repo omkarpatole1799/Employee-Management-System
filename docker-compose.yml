@@ -3,7 +3,6 @@ version: '3.8'
 services:
   mysql:
     image: mysql:8.0
-    network_mode: 'host'
     restart: always
     command: --default-authentication-plugin=mysql_native_password
     environment:
@@ -14,12 +13,11 @@ services:
     volumes:
       - ./my-datavolume:/var/lib/mysql
   api:
-    container_name: ems_api
+    container_name: ems_api_container
     restart: always
-    image: node-server-ems
-    network_mode: 'host'
+    image: api
     build:
-      context: ems-api
+      context: ./api
       dockerfile: Dockerfile
     ports:
       - 4040:4040
@@ -28,14 +26,13 @@ services:
     # env_file:
     #   - .env
   web:
-    container_name: ems_web
+    container_name: ems_web_container
     restart: always
-    image: ems-web
-    network_mode: 'host'
+    image: web
     build:
-      context: ems-web
+      context: ./web
       dockerfile: Dockerfile
     ports:
       - 3000:3000
     depends_on:
-      - api
+      - mysql
