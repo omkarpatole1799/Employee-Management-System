@@ -11,4 +11,4 @@ COPY . .
 
 CMD ["npm", "start"]
 
-FROM nginx:alpine
+# FROM nginx:alpine
