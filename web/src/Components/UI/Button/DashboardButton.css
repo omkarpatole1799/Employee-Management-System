@@ -1,0 +1,7 @@
+.button--dashboard {
+  background-color: var(--main-shade-1);
+  color: var(--grey-tint-1);
+  height: 8rem;
+
+  font-size: 2rem;
+}

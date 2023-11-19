@@ -1,0 +1,13 @@
+.dashboard-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 1.8rem;
+  row-gap: 2rem;
+
+  padding: 1.8rem;
+}
+
+.dashboard-welcome-heading {
+  grid-row: 1 / 2;
+  grid-column: span 2;
+}
