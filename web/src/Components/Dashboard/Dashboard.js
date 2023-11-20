@@ -41,7 +41,7 @@ function Dashboard() {
   function getUserName() {
     setUserName(localStorage.getItem('userName'))
   }
-  
+
   return (
     <div className='dashboard-container'>
       <h3 className='heading-1 dashboard-welcome-heading'>
@@ -59,6 +59,13 @@ function Dashboard() {
         onClick={() => navigate('/add-log')}
       >
         Add log
+      </DashboardButton>
+
+      <DashboardButton
+        className='button'
+        onClick={() => navigate('/log-list')}
+      >
+        Log list
       </DashboardButton>
 
       {isAdmin && (
