@@ -36,7 +36,6 @@ app.use(multer({ storage: storage }).single('profileImage'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-
 app.use('/', indexRoutes);
 app.use(function (req, res) {
   res.status(404).send({
@@ -56,13 +55,23 @@ sequelize
   // .sync({ force: true })
   // .sync({ alter: true })
   .sync()
-  .then(()=>{
-    User.create({
-      userName: '1',
-      userEmail: '1',
-      password: '$2a$12$5Knuj8XPp16JoQExKJbU5Or2AI75bZ3TizXKDo5HxLWedWogjvfMe',
-      userType: 1
-    })
+  .then(() => {
+    return User.findOne({
+      where: {
+        userName: '1'
+      }
+    });
+  })
+  .then((user) => {
+    if (!user) {
+      User.create({
+        userName: '1',
+        userEmail: '1',
+        password:
+          '$2a$12$5Knuj8XPp16JoQExKJbU5Or2AI75bZ3TizXKDo5HxLWedWogjvfMe',
+        userType: 1
+      });
+    }
   })
   .then((result) => {
     app.listen(`${process.env.PORT}`, () => {

@@ -14,26 +14,8 @@
   padding: 10px;
 }
 
-/* .log-add-success-alert {
-  position: absolute;
-  top: 80px;
-  right: 10px;
 
+.add-log-button-container {
   display: flex;
-  justify-content: center;
-  align-items: center;
-
-  background-color: #333;
-  color: #fff;
-  padding: 0.8rem 1.2rem;
-  border-radius: 10px;
-  font-size: 1.4rem;
-
-  transform: translateX(120%);
-
-  transition: all 0.4s ease-in;
+  justify-content: space-between;
 }
-
-.show {
-  transform: translateX(0%);
-} */
