@@ -17,6 +17,10 @@ td {
   align-items: center;
 }
 
+.log-list-nav select {
+  margin-bottom: 0;
+}
+
 .log-card {
   background-color: var(--main-shade-1);
   border-radius: 15px;
