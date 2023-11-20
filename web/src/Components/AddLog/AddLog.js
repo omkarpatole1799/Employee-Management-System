@@ -1,10 +1,12 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import Button from '../UI/Button/Button'
 
 // CSS IMPORT
 import './add-log.css'
 
 function AddLog() {
+  const navigate = useNavigate()
   const [log, setLog] = useState()
   const [logError, setLogError] = useState(false)
   const [projectTitle, setProjectTitle] = useState()
@@ -142,13 +144,17 @@ function AddLog() {
             </div>
           </div>
 
-          <div className=''>
+          <div className='add-log-button-container'>
             <Button
               onClick={submitLogHandler}
               type='button'
               className='button button--primary'
             >
               Submit
+            </Button>
+
+            <Button onClick={() => navigate('/log-list')} className='button button--secondary'>
+              Log list
             </Button>
           </div>
 
