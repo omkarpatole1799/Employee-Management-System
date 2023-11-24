@@ -59,11 +59,13 @@ sequelize
     return User.findOne({
       where: {
         userName: '1'
-      }
+      },
+      attributes: ['userName'],
+      raw: true
     });
   })
   .then((user) => {
-    if (!user) {
+    if (user.userName !== '1') {
       User.create({
         userName: '1',
         userEmail: '1',
@@ -73,7 +75,7 @@ sequelize
       });
     }
   })
-  .then((result) => {
+  .then(() => {
     app.listen(`${process.env.PORT}`, () => {
       console.log('app running on port', process.env.PORT);
     });
