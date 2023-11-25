@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 
 // CSS IMPORT
 import './Login.css'
+import './Login-media.css'
 
 function Login() {
   const navigate = useNavigate()
@@ -153,10 +154,11 @@ function Login() {
               <div className='loginFormButtonContainer'>
                 <button
                   type='submit'
-                  className='loginButton'
+                  className='button button--primary'
                   onClick={loginButtonHandler}
                 >
-                  Submit
+                  {/* Submit
+                  <i className='fa-solid fa-right-to-bracket'></i> */}
                 </button>
               </div>
             </form>
