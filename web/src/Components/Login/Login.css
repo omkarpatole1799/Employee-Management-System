@@ -5,11 +5,9 @@
   justify-content: center;
   align-items: center;
 }
-.loginContainer {
-  margin: 0 3.2rem;
-}
 
 .loginContainer {
+  margin: 0 3.2rem;
   display: grid;
   grid-template-columns: 1fr;
 
@@ -28,13 +26,6 @@
 .login-heading {
   text-align: center;
 }
-/* .loginFormContainer {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 2.4rem;
-} */
 
 .loginFormInputContainer {
   display: flex;
@@ -77,4 +68,8 @@
   letter-spacing: 0.5px;
 
   box-shadow: 0 0.5rem 1rem rgba(51, 155, 240, 0.3);
+}
+
+.loginFormButtonContainer i {
+  margin-left: 1rem;
 }
