@@ -25,7 +25,6 @@ function AddLog() {
 
   function submitLogHandler(e) {
     e.preventDefault()
-    console.log(log)
 
     if (projectTitle === undefined || projectTitle === '') {
       setProjectTitleError(true)
@@ -110,9 +109,7 @@ function AddLog() {
             </select>
             <div
               className={
-                projectTitleError
-                  ? 'alert-1 alert-show'
-                  : 'alert-1'
+                projectTitleError ? 'alert alert' : 'alert'
               }
             >
               Please select project title
@@ -136,9 +133,7 @@ function AddLog() {
               onChange={logChangeHandler}
             />
             <div
-              className={
-                logError ? 'alert-1 alert-show' : 'alert-1'
-              }
+              className={logError ? 'alert alert' : 'alert'}
             >
               Please enter log
             </div>
@@ -153,15 +148,16 @@ function AddLog() {
               Submit
             </Button>
 
-            <Button onClick={() => navigate('/log-list')} className='button button--secondary'>
+            <Button
+              onClick={() => navigate('/log-list')}
+              className='button button--secondary'
+            >
               Log list
             </Button>
           </div>
 
           <div
-            className={
-              logStatus ? 'alert-1 alert-show' : 'alert-1'
-            }
+            className={logStatus ? 'alert alert' : 'alert'}
           >
             Log Added Successfully
           </div>
