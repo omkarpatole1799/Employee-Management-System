@@ -1,39 +1,38 @@
 // functions import
 import { useState } from 'react'
 
-// HELPER FUNCTIONS IMPORT
-import { postUserData } from './helpers'
-
 // components import
 import Button from '../UI/Button/Button'
 
 // CSS IMPORT
 import './addEmployee.css'
+import Alert from '../UI/Button/Alert/Alert'
 
 function AddEmployee() {
-  const [emailAlreadyExsist, setEmailAlreadyExsist] =
-    useState(false)
+  const [input, setInput] = useState({
+    userName: '',
+    emailId: '',
+    password: ''
+  })
 
-  const [userName, setUserName] = useState('')
-  const [email, setEmail] = useState('')
-  const [pass, setPass] = useState('')
+  const [alert, setAlert] = useState({
+    isShow: false,
+    message: ''
+  })
 
-  const [createSuccess, setCreateSuccess] = useState(false)
+  const inputChangeHandler = (e) => {
+    console.log('Handling input change')
+    setInput({
+      ...input,
+      [e.target.name]: e.target.value
+    })
+  }
 
   const [adminCheckbox, setAdminCheckbox] = useState(false)
   const [employeeCheckBox, setemployeeCheckBox] =
     useState(false)
   const [userType, setUserType] = useState(null)
 
-  function user_nameChangeHandler(e) {
-    setUserName(e.target.value)
-  }
-  function emailChangeHandler(e) {
-    setEmail(e.target.value)
-  }
-  function passwordChangeHandler(e) {
-    setPass(e.target.value)
-  }
   function adminCheckboxHandler(e) {
     setUserType(1)
     setemployeeCheckBox(false)
@@ -46,46 +45,63 @@ function AddEmployee() {
   }
   function submitFormHandler(e) {
     e.preventDefault()
-
-    if (email !== '' && pass !== '') {
-      postSignUp()
+    console.log(input)
+    for (let key of Object.entries(input)) {
+      if (key[1] === '') {
+        let alertMessage = `${key[0].toLocaleLowerCase()} is empty`
+        showAlert(alertMessage)
+        return false
+      }
     }
   }
-  const postSignUp = async () => {
-    setEmailAlreadyExsist(false)
-    try {
-      let sendData = {
-        userName,
-        email,
-        pass,
-        userType
-      }
-      const res = await postUserData(sendData)
+  // const postSignUp = async () => {
+  //   setEmailAlreadyExsist(false)
+  //   try {
+  //     let sendData = {
+  //       userName,
+  //       email,
+  //       pass,
+  //       userType
+  //     }
+  //     const res = await postUserData(sendData)
 
-      let data = await res.json()
+  //     let data = await res.json()
 
-      if (data.message === 'Email already exsist') {
-        setEmailAlreadyExsist(true)
-        setTimeout(() => {
-          setEmailAlreadyExsist(false)
-        }, 1500)
-      }
-      if (data.message === 'User Created successfully') {
-        setUserName('')
-        setEmail('')
-        setPass('')
-        setCreateSuccess(true)
-        setTimeout(() => {
-          setCreateSuccess(false)
-        }, 1500)
-      }
-    } catch (error) {
-      alert('Something went wrong, please try again later!')
-    }
+  //     if (data.message === 'Email already exsist') {
+  //       setEmailAlreadyExsist(true)
+  //       setTimeout(() => {
+  //         setEmailAlreadyExsist(false)
+  //       }, 1500)
+  //     }
+  //     if (data.message === 'User Created successfully') {
+  //       setInput('')
+  //       setCreateSuccess(true)
+  //       setTimeout(() => {
+  //         setCreateSuccess(false)
+  //       }, 1500)
+  //     }
+  //   } catch (error) {
+  //     alert('Something went wrong, please try again later!')
+  //   }
+  // }
+
+  function showAlert(message) {
+    setAlert({
+      isShow: true,
+      message: message
+    })
+
+    setTimeout(() => {
+      setAlert({
+        isShow: false,
+        message: ''
+      })
+    }, 2500)
   }
 
   return (
     <div className='container-primary'>
+      {alert.isShow && <Alert>{alert.message} </Alert>}
       <h3 className='heading-1'>Add User</h3>
       <div className=''>
         <form
@@ -94,18 +110,15 @@ function AddEmployee() {
           encType='application/json'
         >
           <div className='form-input-group'>
-            <label
-              className='input-label'
-              htmlFor='user_name'
-            >
+            <label className='input-label' htmlFor='userName'>
               User Name
             </label>
             <input
               type='text'
               className='input-element'
-              id='user_name'
-              name='user_name'
-              onChange={user_nameChangeHandler}
+              id='userName'
+              name='userName'
+              onChange={inputChangeHandler}
             />
           </div>
 
@@ -118,18 +131,8 @@ function AddEmployee() {
               className='input-element'
               id='emailId'
               name='emailId'
-              onChange={emailChangeHandler}
+              onChange={inputChangeHandler}
             />
-            {/* {emailAlreadyExsist && (
-              <span>Email already exsist</span>
-            )} */}
-            <div
-              className={
-                emailAlreadyExsist ? 'alert show' : 'alert'
-              }
-            >
-              Email already exsist
-            </div>
           </div>
           <div className='form-input-group'>
             <label className='input-label' htmlFor='password'>
@@ -140,9 +143,25 @@ function AddEmployee() {
               className='input-element'
               id='password'
               name='password'
-              onChange={passwordChangeHandler}
+              onChange={inputChangeHandler}
             />
           </div>
+
+          <div className='form-input-group'>
+            <label
+              htmlFor='profile-photo'
+              className='input-label'
+            >
+              Profile Photo
+            </label>
+            <input
+              type='file'
+              className=''
+              id='profile-photo'
+              name='profile-photo'
+            />
+          </div>
+
           <div className='add-emp-checkbox-container'>
             <div className='form-check-group'>
               <input
@@ -182,11 +201,6 @@ function AddEmployee() {
             >
               Submit
             </Button>
-          </div>
-          <div
-            className={createSuccess ? 'alert show' : 'alert'}
-          >
-            User added Successfully
           </div>
         </form>
       </div>
