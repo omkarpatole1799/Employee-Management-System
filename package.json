@@ -1,0 +1,16 @@
+{
+  "name": "employee-management-system",
+  "version": "1.0.0",
+  "description": "\"# Employee-Management-System\"",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "startfb": "concurrently \" cd web && npm start \"  \"cd api && npm start\" "
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
