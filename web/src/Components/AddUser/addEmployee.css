@@ -30,27 +30,4 @@ input[type='checkbox'] {
   width: 2.4rem;
 }
 
-.alert {
-  position: absolute;
-  /* bottom: 50px; */
-  top: 80px;
-  right: 10px;
 
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  background-color: #333;
-  color: #fff;
-  padding: 0.8rem 1.2rem;
-  border-radius: 10px;
-  font-size: 1.4rem;
-
-  transform: translateX(120%);
-
-  transition: all 0.4s ease-in;
-}
-
-.show {
-  transform: translateX(0%);
-}
