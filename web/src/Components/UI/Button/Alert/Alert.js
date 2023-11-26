@@ -3,10 +3,8 @@ import React, { useState } from 'react'
 import './alert.css'
 
 function Alert(props) {
-  console.log(props)
   const [alert, setAlert] = useState(true)
 
-  
   setTimeout(() => {
     setAlert(false)
   }, 2500)
