@@ -1,6 +1,9 @@
 // functions import
 import { useState } from 'react'
 
+// HELPER FUNCTION IMPORT
+import { postUserData } from './helpers'
+
 // components import
 import Button from '../UI/Button/Button'
 
@@ -15,17 +18,37 @@ function AddEmployee() {
     password: ''
   })
 
+  const [profilePicture, setProfilePicture] = useState(null)
+
   const [alert, setAlert] = useState({
     isShow: false,
     message: ''
   })
 
   const inputChangeHandler = (e) => {
-    console.log('Handling input change')
     setInput({
       ...input,
       [e.target.name]: e.target.value
     })
+  }
+
+  const fileChangeHandler = (e) => {
+    if (isFileTypeAllowed(e)) {
+      setProfilePicture(e.target.files[0])
+    }
+  }
+
+  function isFileTypeAllowed(e) {
+    const fileExtension = e.target.files[0].name.split('.')[1]
+    const allowedFileTypes = ['png', 'jpeg', 'jpg']
+    let isMatched = false
+    for (let i of allowedFileTypes) {
+      fileExtension === i && (isMatched = true)
+    }
+    if (!isMatched) {
+      showAlert(`Only ${[...allowedFileTypes]} are allowed`)
+    }
+    return isMatched
   }
 
   const [adminCheckbox, setAdminCheckbox] = useState(false)
@@ -43,9 +66,9 @@ function AddEmployee() {
     setAdminCheckbox(false)
     setemployeeCheckBox(true)
   }
+
   function submitFormHandler(e) {
     e.preventDefault()
-    console.log(input)
     for (let key of Object.entries(input)) {
       if (key[1] === '') {
         let alertMessage = `${key[0].toLocaleLowerCase()} is empty`
@@ -53,38 +76,38 @@ function AddEmployee() {
         return false
       }
     }
-    
+    postSignUp()
   }
-  // const postSignUp = async () => {
-  //   setEmailAlreadyExsist(false)
-  //   try {
-  //     let sendData = {
-  //       userName,
-  //       email,
-  //       pass,
-  //       userType
-  //     }
-  //     const res = await postUserData(sendData)
 
-  //     let data = await res.json()
+  const postSignUp = async () => {
+    try {
+      let sendData = {
+        userName: input.userName,
+        email: input.emailId,
+        pass: input.password,
+        userType,
+        profilePicture
+      }
 
-  //     if (data.message === 'Email already exsist') {
-  //       setEmailAlreadyExsist(true)
-  //       setTimeout(() => {
-  //         setEmailAlreadyExsist(false)
-  //       }, 1500)
-  //     }
-  //     if (data.message === 'User Created successfully') {
-  //       setInput('')
-  //       setCreateSuccess(true)
-  //       setTimeout(() => {
-  //         setCreateSuccess(false)
-  //       }, 1500)
-  //     }
-  //   } catch (error) {
-  //     alert('Something went wrong, please try again later!')
-  //   }
-  // }
+      const res = await postUserData(sendData)
+
+      let data = await res.json()
+
+      // if (data.message === 'Email already exsist') {
+      //   setEmailAlreadyExsist(true)
+      //   setTimeout(() => {
+      //     setEmailAlreadyExsist(false)
+      //   }, 1500)
+      // }
+      // if (data.message === 'User Created successfully') {
+      //   setInput('')
+      //   setCreateSuccess(true)
+      //   setTimeout(() => {
+      //     setCreateSuccess(false)
+      //   }, 1500)
+      // }
+    } catch (error) {}
+  }
 
   function showAlert(message) {
     setAlert({
@@ -108,7 +131,7 @@ function AddEmployee() {
         <form
           method='POST'
           className='add-employee-form-container'
-          encType='application/json'
+          encType='multipart/form-data'
         >
           <div className='form-input-group'>
             <label className='input-label' htmlFor='userName'>
@@ -160,6 +183,7 @@ function AddEmployee() {
               className=''
               id='profile-photo'
               name='profile-photo'
+              onChange={fileChangeHandler}
             />
           </div>
 
