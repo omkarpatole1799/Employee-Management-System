@@ -22,17 +22,24 @@ app.use(cors());
 // multer
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'images');
+    cb(null, 'public/profile-picture');
   },
   filename: function (req, file, cb) {
-    let profileImageName = `profileImage-${
+    let profileImageName = `profilePicture-${
       req.body.email.split('@')[0]
     }`;
-    cb(null, profileImageName + '-' + file.originalname);
+    console.log(profileImageName);
+    console.log(file);
+    cb(
+      null,
+      profileImageName + '.' + file.originalname.split('.')[1]
+    );
   }
 });
 
-app.use(multer({ storage: storage }).single('profileImage'));
+app.use(
+  multer({ storage: storage }).single('profilePicture')
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
