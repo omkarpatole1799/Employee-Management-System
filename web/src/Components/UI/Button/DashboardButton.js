@@ -9,7 +9,7 @@ function DashboardButton(props) {
       onClick={props.onClick}
       className={`${props.className} button--dashboard`}
     >
-      {props.children}
+      {props.btnName}
     </button>
   )
 }

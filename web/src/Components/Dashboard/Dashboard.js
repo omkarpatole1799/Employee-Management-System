@@ -45,42 +45,40 @@ function Dashboard() {
   return (
     <div className='dashboard-container'>
       <h3 className='heading-1 dashboard-welcome-heading'>
-        Hello ! <br></br> {userName}
+        {' '}
+        {userName}
       </h3>
       <DashboardButton
         className='button'
         onClick={() => navigate('/add-attendance')}
-      >
-        Attendance
-      </DashboardButton>
+        btnName={'Attendance'}
+      />
 
       <DashboardButton
         className='button'
         onClick={() => navigate('/add-log')}
-      >
-        Add log
-      </DashboardButton>
+        btnName={'Add log'}
+      />
 
       <DashboardButton
         className='button'
         onClick={() => navigate('/log-list')}
-      >
-        Log list
-      </DashboardButton>
+        btnName={'Log list'}
+      />
 
       {isAdmin && (
         <DashboardButton
-          onClick={() => navigate('/add-employee')}
           className='button'
-        >
-          Add User
-        </DashboardButton>
+          onClick={() => navigate('/add-employee')}
+          btnName={'Add Employee'}
+        />
       )}
 
       {isAdmin && (
-        <DashboardButton className='button'>
-          Total Employees ({totalEmployees})
-        </DashboardButton>
+        <DashboardButton
+          className='button'
+          btnName={`Total Employees ${totalEmployees}`}
+        />
       )}
     </div>
   )

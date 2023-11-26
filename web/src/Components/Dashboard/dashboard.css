@@ -7,7 +7,17 @@
   padding: 1.8rem;
 }
 
-.dashboard-welcome-heading {
-  grid-row: 1 / 2;
+.dashboard-container > :nth-child(1) {
   grid-column: span 2;
+}
+
+.dashboard-welcome-heading {
+  position: relative;
+}
+
+.dashboard-welcome-heading::before {
+  content: 'HELLO !';
+  position: absolute;
+  top: -2.4rem;
+  left: 0;
 }
