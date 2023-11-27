@@ -93,19 +93,9 @@ function AddEmployee() {
 
       let data = await res.json()
 
-      // if (data.message === 'Email already exsist') {
-      //   setEmailAlreadyExsist(true)
-      //   setTimeout(() => {
-      //     setEmailAlreadyExsist(false)
-      //   }, 1500)
-      // }
-      // if (data.message === 'User Created successfully') {
-      //   setInput('')
-      //   setCreateSuccess(true)
-      //   setTimeout(() => {
-      //     setCreateSuccess(false)
-      //   }, 1500)
-      // }
+      console.log(data)
+
+      showAlert(data.message)
     } catch (error) {}
   }
 

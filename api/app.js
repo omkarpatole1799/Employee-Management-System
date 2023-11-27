@@ -28,8 +28,6 @@ const storage = multer.diskStorage({
     let profileImageName = `profilePicture-${
       req.body.email.split('@')[0]
     }`;
-    console.log(profileImageName);
-    console.log(file);
     cb(
       null,
       profileImageName + '.' + file.originalname.split('.')[1]
@@ -72,6 +70,7 @@ sequelize
     });
   })
   .then((user) => {
+    console.log(user);
     if (user.userName !== '1') {
       User.create({
         userName: '1',
