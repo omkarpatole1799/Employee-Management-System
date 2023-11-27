@@ -8,10 +8,11 @@ dotenv.config();
 exports.addUser = async (req, res) => {
   let {
     userName,
-    userEmail,
+    email: userEmail,
     pass: password,
     userType
   } = req.body;
+
   let user = await UserModel.findOne({
     where: { userEmail }
   });
@@ -25,11 +26,18 @@ exports.addUser = async (req, res) => {
 
   let hashedPassword = await hashPassword(password);
 
+  let profilePicture =
+    req.file.path.split('\\')[
+      req.file.path.split('\\').length - 1
+    ];
+  console.log(typeof profilePicture);
+
   await createUser(
     userName,
     userEmail,
     hashedPassword,
-    userType
+    userType,
+    profilePicture
   );
 
   res.status(201).json({
@@ -47,7 +55,8 @@ async function createUser(
   userName,
   userEmail,
   hashedPassword,
-  userType
+  userType,
+  profilePicture
 ) {
   // RETURN CREATE USER
   return (
@@ -55,7 +64,8 @@ async function createUser(
       userName,
       userEmail,
       password: hashedPassword,
-      userType // 1 for admin user and 2 for employee user
+      userType, // 1 for admin user and 2 for employee user
+      profilePicture
     })
   ).get({ plain: true });
 }
@@ -65,7 +75,6 @@ async function createUser(
 // ********************************************
 
 exports.getEmployeeCount = async (req, res) => {
-  console.log('getting emp count');
   try {
     let response = await UserModel.findAll({
       attributes: [
@@ -76,7 +85,6 @@ exports.getEmployeeCount = async (req, res) => {
       ],
       raw: true
     });
-    console.log(response[0], '-- total emp count --');
     res.status(200).json({
       call: 1,
       totalEmployees: response[0]
