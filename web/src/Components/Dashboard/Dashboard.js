@@ -44,9 +44,8 @@ function Dashboard() {
 
   return (
     <div className='dashboard-container'>
-      
       <h3 className='heading-1 dashboard-welcome-heading'>
-        {userName} 
+        {userName}
       </h3>
       <DashboardButton
         className='button'
@@ -67,18 +66,24 @@ function Dashboard() {
       />
 
       {isAdmin && (
-        <DashboardButton
-          className='button'
-          onClick={() => navigate('/add-employee')}
-          btnName={'Add Employee'}
-        />
-      )}
+        <>
+          <DashboardButton
+            className='button'
+            onClick={() => navigate('/add-employee')}
+            btnName={'Add Employee'}
+          />
 
-      {isAdmin && (
-        <DashboardButton
-          className='button'
-          btnName={`Total Employees ${totalEmployees}`}
-        />
+          <DashboardButton
+            className='button'
+            btnName={`Total Employees ${totalEmployees}`}
+          />
+
+          <DashboardButton
+            className='button'
+            btnName={`Add Project`}
+            onClick={() => navigate('/add-project')}
+          />
+        </>
       )}
     </div>
   )
