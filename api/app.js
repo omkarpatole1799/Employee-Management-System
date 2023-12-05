@@ -13,6 +13,8 @@ const sequelize = require('./Utils/database');
 const User = require('./Model/userModel');
 const UserLog = require('./Model/logDataModel');
 const attendance = require('./Model/attendanceModel');
+const projectListModel = require('./Model/projectListModel');
+
 const app = express();
 
 // middlewares
@@ -71,7 +73,7 @@ sequelize
   })
   .then((user) => {
     console.log(user);
-    if (user.userName !== '1') {
+    if (user === null) {
       User.create({
         userName: '1',
         userEmail: '1',
