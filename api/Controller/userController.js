@@ -1,7 +1,7 @@
 // adding user logs
 const sequelize = require('sequelize');
 const UserLog = require('../Model/logDataModel');
-
+const projectList = require('../Model/projectListModel');
 exports.postLogData = async (req, res) => {
   const { log, projectTitle } = req.body;
   const userId = req.userId;
@@ -43,4 +43,36 @@ exports.getLogList = function (req, res) {
         data: err
       });
     });
+};
+
+exports.postProjectName = async function (req, res) {
+  console.log(req.body, 'p name');
+  let { projectName } = req.body;
+
+  let response = await projectList.create(
+    {
+      projectName
+    },
+    { raw: true }
+  );
+
+  console.log(response, 'response');
+
+  // projectList
+  //   .create({
+  //     projectName,
+  //     next,
+  //     raw: true
+  //   })
+  //   .then((result) => {
+  //     return res.status(201).json({
+  //       call: 1
+  //     });
+  //   })
+  //   .catch((err) => {
+  //     return res.status(500).json({
+  //       call: 0,
+  //       data: err
+  //     });
+  //   });
 };
