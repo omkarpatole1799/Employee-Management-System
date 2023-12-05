@@ -4,9 +4,12 @@ import { useNavigate } from 'react-router-dom'
 // CSS IMPORT
 import './Login.css'
 import './Login-media.css'
+import Loader from '../UI/Loader/Loader'
 
 function Login() {
   const navigate = useNavigate()
+
+  const [loader, setLoader] = useState(false)
 
   const [inputValue, setInputValue] = useState({
     email: '',
@@ -42,7 +45,7 @@ function Login() {
   }
 
   const loginRequestHandler = async (email, pass) => {
-    console.log(email, pass)
+    setLoader(true)
     const res = await fetch('/auth/login', {
       method: 'POST',
       headers: {
@@ -72,6 +75,7 @@ function Login() {
       localStorage.setItem('userId', userId)
       localStorage.setItem('userName', userName)
       localStorage.setItem('userType', userType)
+      setLoader(false)
       navigate('/')
     }
 
@@ -108,7 +112,7 @@ function Login() {
           {alert.message}
         </div>
       )}
-
+      {loader && <Loader />}
       <div className='loginBox'>
         <div className='loginContainer'>
           <div>
