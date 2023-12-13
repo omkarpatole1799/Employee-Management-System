@@ -7,19 +7,24 @@ import './Login-media.css'
 import Loader from '../UI/Loader/Loader'
 import { Notification } from '../UI/Notification/Notification'
 import { notifcationActions } from '../../Store/notification-slice'
+import { useDispatch, useSelector } from 'react-redux'
+
 function Login() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const [loader, setLoader] = useState(false)
+
+  const isShowNotification = useSelector(
+    (state) => state.showNotification
+  )
+
+  const isShowLoader = useSelector(
+    (state) => state.showLoader
+  )
+  console.log(isShowLoader)
 
   const [inputValue, setInputValue] = useState({
     email: '',
     pass: ''
-  })
-
-  const [alert, setAlert] = useState({
-    value: false,
-    message: ''
   })
 
   function handleInputChange(e) {
@@ -31,14 +36,19 @@ function Login() {
 
   function loginButtonHandler(e) {
     e.preventDefault()
-    notifcationActions.showNotification()
-    return false
+    dispatch(
+      notifcationActions.showNotification('Loggin you in!')
+    )
     if (inputValue.email === '') {
-      displayAlert('Email Empty')
+      dispatch(
+        notifcationActions.showNotification('Email Empty')
+      )
       return false
     }
     if (inputValue.pass === '') {
-      displayAlert('Password Empty')
+      dispatch(
+        notifcationActions.showNotification('Password Empty')
+      )
       return false
     }
 
@@ -48,7 +58,7 @@ function Login() {
   }
 
   const loginRequestHandler = async (email, pass) => {
-    setLoader(true)
+    dispatch(notifcationActions.showLoader())
     const res = await fetch('/auth/login', {
       method: 'POST',
       headers: {
@@ -64,7 +74,9 @@ function Login() {
       await res.json()
 
     if (message === 'Not authorized') {
-      displayAlert('Not authorized')
+      dispatch(
+        notifcationActions.showNotification('Not authorized')
+      )
     }
 
     if (message === 'authenticated') {
@@ -78,45 +90,30 @@ function Login() {
       localStorage.setItem('userId', userId)
       localStorage.setItem('userName', userName)
       localStorage.setItem('userType', userType)
-      setLoader(false)
+
+      dispatch(notifcationActions.hideLoader())
       navigate('/')
     }
 
     if (message === 'Incorret Password') {
-      displayAlert('Incorrect Password')
+      dispatch(
+        notifcationActions.showNotification(
+          'Incorrect password'
+        )
+      )
     }
 
     if (message === 'Incorrect Email') {
-      displayAlert('Incorrect email')
+      dispatch(
+        notifcationActions.showNotification('Incorrect Email')
+      )
     }
-  }
-
-  function displayAlert(message) {
-    setAlert({
-      value: true,
-      message: message
-    })
-    setTimeout(() => {
-      setAlert({
-        value: false,
-        message: ''
-      })
-    }, 2500)
   }
 
   return (
     <>
-      {alert.value && (
-        <div
-          className={
-            alert.value ? 'alert-1 alert-show' : 'alert-1'
-          }
-        >
-          {alert.message}
-        </div>
-      )}
-      {loader && <Loader />}
-      <Notification message={'message sample'} />
+      {isShowLoader && <Loader />}
+      {isShowNotification && <Notification />}
       <div className='loginBox'>
         <div className='loginContainer'>
           <div>

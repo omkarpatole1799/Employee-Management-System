@@ -2,17 +2,28 @@ import { createSlice, configureStore } from '@reduxjs/toolkit'
 
 const notificationSlice = createSlice({
   name: 'notificationSlice',
-  initialState: { showNotification: null },
+  initialState: {
+    showNotification: null,
+    message: null,
+    showLoader: null
+  },
   reducers: {
     showNotification(state, action) {
-      state.showNotification = {
-        show: true
-        // status: action.payload.status,
-        // message: action.payload.message
-      }
-      setTimeout(() => {
-        state.showNotification = null
-      }, 1500)
+      state.showNotification = true
+      state.message = action.payload
+    },
+
+    hideNotification(state, action) {
+      state.showNotification = null
+      state.message = null
+    },
+
+    showLoader(state, action) {
+      state.showLoader = true
+    },
+
+    hideLoader(state, action) {
+      state.showLoader = null
     }
   }
 })

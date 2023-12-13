@@ -212,7 +212,6 @@ textarea:focus {
 /* ********************** */
 
 .alert {
-  display: none;
   position: absolute;
 
   top: 0;
@@ -223,9 +222,4 @@ textarea:focus {
   padding: 0.8rem 1.2rem;
   border-radius: 10px;
   font-size: 1.4rem;
-  /* transform: translateX(100%); */
-}
-
-.show {
-  display: block !important;
 }
