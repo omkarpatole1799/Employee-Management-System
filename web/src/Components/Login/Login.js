@@ -5,10 +5,11 @@ import { useNavigate } from 'react-router-dom'
 import './Login.css'
 import './Login-media.css'
 import Loader from '../UI/Loader/Loader'
-
+import { Notification } from '../UI/Notification/Notification'
+import { notifcationActions } from '../../Store/notification-slice'
 function Login() {
   const navigate = useNavigate()
-
+  const dispatch = useDispatch()
   const [loader, setLoader] = useState(false)
 
   const [inputValue, setInputValue] = useState({
@@ -30,6 +31,8 @@ function Login() {
 
   function loginButtonHandler(e) {
     e.preventDefault()
+    notifcationActions.showNotification()
+    return false
     if (inputValue.email === '') {
       displayAlert('Email Empty')
       return false
@@ -113,6 +116,7 @@ function Login() {
         </div>
       )}
       {loader && <Loader />}
+      <Notification message={'message sample'} />
       <div className='loginBox'>
         <div className='loginContainer'>
           <div>
