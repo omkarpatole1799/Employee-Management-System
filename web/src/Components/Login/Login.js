@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 // CSS IMPORT
@@ -8,6 +8,7 @@ import Loader from '../UI/Loader/Loader'
 import { Notification } from '../UI/Notification/Notification'
 import { notifcationActions } from '../../Store/notification-slice'
 import { useDispatch, useSelector } from 'react-redux'
+import useHttp from '../Hooks/use-http'
 
 function Login() {
   const navigate = useNavigate()
@@ -20,7 +21,6 @@ function Login() {
   const isShowLoader = useSelector(
     (state) => state.showLoader
   )
-  console.log(isShowLoader)
 
   const [inputValue, setInputValue] = useState({
     email: '',
@@ -53,62 +53,68 @@ function Login() {
     }
 
     if (inputValue.email !== '' && inputValue.pass !== '') {
-      loginRequestHandler(inputValue.email, inputValue.pass)
+      const dataFun = (data) => {
+        console.log(data)
+        const {
+          message,
+          tocken,
+          userId,
+          userName,
+          userType
+        } = data
+        if (message === 'Not authorized') {
+          dispatch(
+            notifcationActions.showNotification(
+              'Not authorized'
+            )
+          )
+        }
+        if (message === 'authenticated') {
+          localStorage.setItem('tocken', tocken)
+          let expiration = new Date()
+          expiration.setHours(expiration.getHours() + 10)
+          localStorage.setItem(
+            'tockenExpiry',
+            expiration.toISOString()
+          )
+          localStorage.setItem('userId', userId)
+          localStorage.setItem('userName', userName)
+          localStorage.setItem('userType', userType)
+          dispatch(notifcationActions.hideLoader())
+          navigate('/')
+        }
+        if (message === 'Incorret Password') {
+          dispatch(
+            notifcationActions.showNotification(
+              'Incorrect password'
+            )
+          )
+        }
+        if (message === 'Incorrect Email') {
+          dispatch(
+            notifcationActions.showNotification(
+              'Incorrect Email'
+            )
+          )
+        }
+      }
+      sendRequest(
+        {
+          url: '/auth/login',
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: {
+            userEmail: inputValue.email,
+            pass: inputValue.pass
+          }
+        },
+        dataFun
+      )
     }
   }
-
-  const loginRequestHandler = async (email, pass) => {
-    dispatch(notifcationActions.showLoader())
-    const res = await fetch('/auth/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        userEmail: email,
-        pass: pass
-      })
-    })
-
-    const { message, tocken, userId, userName, userType } =
-      await res.json()
-
-    if (message === 'Not authorized') {
-      dispatch(
-        notifcationActions.showNotification('Not authorized')
-      )
-    }
-
-    if (message === 'authenticated') {
-      localStorage.setItem('tocken', tocken)
-      let expiration = new Date()
-      expiration.setHours(expiration.getHours() + 10)
-      localStorage.setItem(
-        'tockenExpiry',
-        expiration.toISOString()
-      )
-      localStorage.setItem('userId', userId)
-      localStorage.setItem('userName', userName)
-      localStorage.setItem('userType', userType)
-
-      dispatch(notifcationActions.hideLoader())
-      navigate('/')
-    }
-
-    if (message === 'Incorret Password') {
-      dispatch(
-        notifcationActions.showNotification(
-          'Incorrect password'
-        )
-      )
-    }
-
-    if (message === 'Incorrect Email') {
-      dispatch(
-        notifcationActions.showNotification('Incorrect Email')
-      )
-    }
-  }
+  const { sendRequest } = useHttp()
 
   return (
     <>
