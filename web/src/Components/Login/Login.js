@@ -163,14 +163,12 @@ function Login() {
                 />
               </div>
               <div className='loginFormButtonContainer'>
-                <button
-                  type='submit'
-                  className='button button--primary'
+                <a
+                  className='button button--primary-2'
                   onClick={loginButtonHandler}
                 >
-                  {/* Submit
-                  <i className='fa-solid fa-right-to-bracket'></i> */}
-                </button>
+                  Login
+                </a>
               </div>
             </form>
           </div>

@@ -5,12 +5,12 @@ import './DashboardButton.css'
 
 function DashboardButton(props) {
   return (
-    <button
+    <a
       onClick={props.onClick}
       className={`${props.className} button--dashboard`}
     >
       {props.btnName}
-    </button>
+    </a>
   )
 }
 
