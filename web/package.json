@@ -2,7 +2,7 @@
   "name": "log",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://192.168.1.5:4040/",
+  "proxy": "http://192.168.1.5:4040",
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.5",
     "@testing-library/jest-dom": "^5.17.0",
