@@ -4,4 +4,10 @@
   height: 8rem;
 
   font-size: 2rem;
+  transition: 60ms all ease-out;
+  box-shadow: 0 2px 0px 2px var(--grey-tint-1);
+}
+.button--dashboard:active {
+  box-shadow: 0 0.5px 0px 0.5px var(--grey-tint-1);
+  transform: translateY(3px);
 }

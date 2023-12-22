@@ -1,27 +1,37 @@
-const useHttp = (requestData) => {
-    const { url, method, headers, body } = requestData;
+import { notifcationActions } from '../../Store/notification-slice'
+import { useDispatch } from 'react-redux'
+const useHttp = () => {
+  const dispatch = useDispatch()
 
-    const sendRequest = async () => {
-        try {
-            const res = await fetch(
-                url,
-                method ? method : "GET",
-                headers ? headers : {},
-                body ? JSON.stringify(body) : null
-            );
-            if (!res.ok) {
-                throw new Error("request failed");
-            }
-            const data = await res.json();
-            return data;
-        } catch (err) {
-            console.log(err.message || "Something went wrong");
-        }
-    };
+  const sendRequest = async (requestData, applyData) => {
+    dispatch(notifcationActions.showLoader())
+    try {
+      console.log(requestData.body)
+      let res = await fetch(requestData.url, {
+        method: requestData.method
+          ? requestData.method
+          : 'GET',
+        headers: requestData.headers
+          ? requestData.headers
+          : {},
+        body: requestData.body
+          ? JSON.stringify(requestData.body)
+          : null
+      })
+      if (!res.ok) {
+        throw new Error('Request failed')
+      }
+      const data = await res.json()
 
-    return {
-        sendRequest,
-    };
-};
+      dispatch(notifcationActions.hideLoader())
+      applyData(data)
+    } catch (err) {
+      console.log(err.message || 'Something went wrong')
+    }
+  }
+  return {
+    sendRequest
+  }
+}
 
-export default useHttp;
+export default useHttp

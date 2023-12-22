@@ -17,7 +17,6 @@ function AddEmployee() {
     emailId: '',
     password: ''
   })
-
   const [profilePicture, setProfilePicture] = useState(null)
 
   const [alert, setAlert] = useState({

@@ -5,6 +5,7 @@ const UserModel = require('../Model/userModel');
 
 exports.postUserLogin = async function (req, res) {
   const { userEmail, pass: enteredPassword } = req.body;
+  console.log(req.body, 'in api');
   console.log(req.body);
   UserModel.findOne({
     where: {

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 // CSS IMPORT
@@ -8,11 +8,14 @@ import './Login-media.css'
 import { notifcationActions } from '../../Store/notification-slice'
 import { loaderActions } from '../../Store/loader-slice'
 import { useDispatch, useSelector } from 'react-redux'
+ 
 import { Notification } from '../UI/Notification/Notification'
+ 
 function Login() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
-
+ 
+  
   const [inputValue, setInputValue] = useState({
     email: '',
     pass: ''
@@ -49,6 +52,7 @@ function Login() {
     }
 
     if (inputValue.email !== '' && inputValue.pass !== '') {
+ 
       loginRequestHandler(inputValue.email, inputValue.pass)
     }
   }
@@ -97,9 +101,11 @@ function Login() {
     if (data.message === 'Incorrect Email') {
       dispatch(
         notifcationActions.showNotification('Incorrect Email')
+ 
       )
     }
   }
+  const { sendRequest } = useHttp()
 
   return (
     <>
@@ -147,14 +153,12 @@ function Login() {
                 />
               </div>
               <div className='loginFormButtonContainer'>
-                <button
-                  type='submit'
-                  className='button button--primary'
+                <a
+                  className='button button--primary-2'
                   onClick={loginButtonHandler}
                 >
-                  {/* Submit
-                  <i className='fa-solid fa-right-to-bracket'></i> */}
-                </button>
+                  Login
+                </a>
               </div>
             </form>
           </div>
