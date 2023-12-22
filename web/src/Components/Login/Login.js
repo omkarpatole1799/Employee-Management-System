@@ -4,23 +4,14 @@ import { useNavigate } from 'react-router-dom'
 // CSS IMPORT
 import './Login.css'
 import './Login-media.css'
-import Loader from '../UI/Loader/Loader'
-import { Notification } from '../UI/Notification/Notification'
-import { notifcationActions } from '../../Store/notification-slice'
-import { useDispatch, useSelector } from 'react-redux'
 
+import { notifcationActions } from '../../Store/notification-slice'
+import { loaderActions } from '../../Store/loader-slice'
+import { useDispatch, useSelector } from 'react-redux'
+import { Notification } from '../UI/Notification/Notification'
 function Login() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
-
-  const isShowNotification = useSelector(
-    (state) => state.showNotification
-  )
-
-  const isShowLoader = useSelector(
-    (state) => state.showLoader
-  )
-  console.log(isShowLoader)
 
   const [inputValue, setInputValue] = useState({
     email: '',
@@ -33,13 +24,18 @@ function Login() {
       [e.target.name]: e.target.value
     })
   }
+  const isShowLoader = useSelector(
+    (state) => state.loader.showLoader
+  )
+
+  const isShowNotification = useSelector(
+    (state) => state.notification.showNotification
+  )
 
   function loginButtonHandler(e) {
     e.preventDefault()
-    dispatch(
-      notifcationActions.showNotification('Loggin you in!')
-    )
     if (inputValue.email === '') {
+      console.log('here')
       dispatch(
         notifcationActions.showNotification('Email Empty')
       )
@@ -58,44 +54,39 @@ function Login() {
   }
 
   const loginRequestHandler = async (email, pass) => {
-    dispatch(notifcationActions.showLoader())
+    dispatch(loaderActions.showLoader())
     const res = await fetch('/auth/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({
-        userEmail: email,
-        pass: pass
-      })
+      body: JSON.stringify({ userEmail: email, pass })
     })
 
-    const { message, tocken, userId, userName, userType } =
-      await res.json()
-
-    if (message === 'Not authorized') {
+    let data = await res.json()
+    if (data.message === 'Not authorized') {
       dispatch(
         notifcationActions.showNotification('Not authorized')
       )
     }
 
-    if (message === 'authenticated') {
-      localStorage.setItem('tocken', tocken)
+    if (data.message === 'authenticated') {
+      localStorage.setItem('tocken', data.tocken)
       let expiration = new Date()
       expiration.setHours(expiration.getHours() + 10)
       localStorage.setItem(
         'tockenExpiry',
         expiration.toISOString()
       )
-      localStorage.setItem('userId', userId)
-      localStorage.setItem('userName', userName)
-      localStorage.setItem('userType', userType)
+      localStorage.setItem('userId', data.userId)
+      localStorage.setItem('userName', data.userName)
+      localStorage.setItem('userType', data.userType)
 
-      dispatch(notifcationActions.hideLoader())
+      dispatch(loaderActions.hideLoader())
       navigate('/')
     }
 
-    if (message === 'Incorret Password') {
+    if (data.message === 'Incorret Password') {
       dispatch(
         notifcationActions.showNotification(
           'Incorrect password'
@@ -103,7 +94,7 @@ function Login() {
       )
     }
 
-    if (message === 'Incorrect Email') {
+    if (data.message === 'Incorrect Email') {
       dispatch(
         notifcationActions.showNotification('Incorrect Email')
       )
@@ -112,7 +103,6 @@ function Login() {
 
   return (
     <>
-      {isShowLoader && <Loader />}
       {isShowNotification && <Notification />}
       <div className='loginBox'>
         <div className='loginContainer'>
