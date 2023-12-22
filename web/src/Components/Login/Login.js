@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 // CSS IMPORT
@@ -105,11 +105,9 @@ function Login() {
       )
     }
   }
-  const { sendRequest } = useHttp()
 
   return (
     <>
-      {isShowNotification && <Notification />}
       <div className='loginBox'>
         <div className='loginContainer'>
           <div>
