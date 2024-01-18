@@ -8,162 +8,142 @@ import './Login-media.css'
 import { notifcationActions } from '../../Store/notification-slice'
 import { loaderActions } from '../../Store/loader-slice'
 import { useDispatch, useSelector } from 'react-redux'
- 
+
 import { Notification } from '../UI/Notification/Notification'
- 
+
 function Login() {
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
- 
-  
-  const [inputValue, setInputValue] = useState({
-    email: '',
-    pass: ''
-  })
+	const navigate = useNavigate()
+	const dispatch = useDispatch()
 
-  function handleInputChange(e) {
-    setInputValue({
-      ...inputValue,
-      [e.target.name]: e.target.value
-    })
-  }
-  const isShowLoader = useSelector(
-    (state) => state.loader.showLoader
-  )
+	const [inputValue, setInputValue] = useState({
+		email: '',
+		pass: ''
+	})
 
-  const isShowNotification = useSelector(
-    (state) => state.notification.showNotification
-  )
+	function handleInputChange(e) {
+		setInputValue({
+			...inputValue,
+			[e.target.name]: e.target.value
+		})
+	}
+	const isShowLoader = useSelector((state) => state.loader.showLoader)
 
-  function loginButtonHandler(e) {
-    e.preventDefault()
-    if (inputValue.email === '') {
-      console.log('here')
-      dispatch(
-        notifcationActions.showNotification('Email Empty')
-      )
-      return false
-    }
-    if (inputValue.pass === '') {
-      dispatch(
-        notifcationActions.showNotification('Password Empty')
-      )
-      return false
-    }
+	const isShowNotification = useSelector(
+		(state) => state.notification.showNotification
+	)
 
-    if (inputValue.email !== '' && inputValue.pass !== '') {
- 
-      loginRequestHandler(inputValue.email, inputValue.pass)
-    }
-  }
+	function loginButtonHandler(e) {
+		e.preventDefault()
+		if (inputValue.email === '') {
+			console.log('here')
+			dispatch(notifcationActions.showNotification('Email Empty'))
+			return false
+		}
+		if (inputValue.pass === '') {
+			dispatch(notifcationActions.showNotification('Password Empty'))
+			return false
+		}
 
-  const loginRequestHandler = async (email, pass) => {
-    dispatch(loaderActions.showLoader())
-    const res = await fetch('/auth/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ userEmail: email, pass })
-    })
+		if (inputValue.email !== '' && inputValue.pass !== '') {
+			loginRequestHandler(inputValue.email, inputValue.pass)
+		}
+	}
 
-    let data = await res.json()
-    if (data.message === 'Not authorized') {
-      dispatch(
-        notifcationActions.showNotification('Not authorized')
-      )
-    }
+	const loginRequestHandler = async (email, pass) => {
+		dispatch(loaderActions.showLoader())
+		const res = await fetch('/auth/login', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({ userEmail: email, pass })
+		})
 
-    if (data.message === 'authenticated') {
-      localStorage.setItem('tocken', data.tocken)
-      let expiration = new Date()
-      expiration.setHours(expiration.getHours() + 10)
-      localStorage.setItem(
-        'tockenExpiry',
-        expiration.toISOString()
-      )
-      localStorage.setItem('userId', data.userId)
-      localStorage.setItem('userName', data.userName)
-      localStorage.setItem('userType', data.userType)
+		let data = await res.json()
+		if (data.message === 'Not authorized') {
+			dispatch(notifcationActions.showNotification('Not authorized'))
+		}
 
-      dispatch(loaderActions.hideLoader())
-      navigate('/')
-    }
+		if (data.message === 'authenticated') {
+			localStorage.setItem('tocken', data.tocken)
+			let expiration = new Date()
+			expiration.setHours(expiration.getHours() + 10)
+			localStorage.setItem('tockenExpiry', expiration.toISOString())
+			localStorage.setItem('userId', data.userId)
+			localStorage.setItem('userName', data.userName)
+			localStorage.setItem('userType', data.userType)
 
-    if (data.message === 'Incorret Password') {
-      dispatch(
-        notifcationActions.showNotification(
-          'Incorrect password'
-        )
-      )
-    }
+			dispatch(loaderActions.hideLoader())
+			navigate('/')
+		}
 
-    if (data.message === 'Incorrect Email') {
-      dispatch(
-        notifcationActions.showNotification('Incorrect Email')
- 
-      )
-    }
-  }
+		if (data.message === 'Incorret Password') {
+			dispatch(notifcationActions.showNotification('Incorrect password'))
+		}
 
-  return (
-    <>
-      <div className='loginBox'>
-        <div className='loginContainer'>
-          <div>
-            <img
-              src={require('./loginPageImage.jpg')}
-              alt=' loginn'
-              className='loginPageImage'
-            />
-          </div>
-          <div className='loginFormContainer'>
-            <h3 className='heading-1 login-heading'>Login</h3>
-            <form
-              className='loginForm'
-              method='POST'
-              encType='application/json'
-            >
-              <div className='loginFormInputContainer'>
-                <label htmlFor='email' className=''>
-                  Email
-                </label>
-                <input
-                  type='text'
-                  name='email'
-                  value={inputValue.email}
-                  id='email'
-                  className='input-element'
-                  onChange={handleInputChange}
-                />
-              </div>
-              <div className='loginFormInputContainer'>
-                <label htmlFor='password' className=''>
-                  Password
-                </label>
-                <input
-                  type='text'
-                  name='pass'
-                  value={inputValue.pass}
-                  id='password'
-                  className='input-element'
-                  onChange={handleInputChange}
-                />
-              </div>
-              <div className='loginFormButtonContainer'>
-                <a
-                  className='button button--primary-2'
-                  onClick={loginButtonHandler}
-                >
-                  Login
-                </a>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </>
-  )
+		if (data.message === 'Incorrect Email') {
+			dispatch(notifcationActions.showNotification('Incorrect Email'))
+		}
+	}
+
+	return (
+		<>
+			<div className='loginBox'>
+				<div className='loginContainer'>
+					<div>
+						<img
+							src={require('./loginPageImage.jpg')}
+							alt=' loginn'
+							className='loginPageImage'
+						/>
+					</div>
+					<div className='loginFormContainer'>
+						<h3 className='heading-1 login-heading'>Login</h3>
+						<form
+							className='loginForm'
+							method='POST'
+							encType='application/json'
+						>
+							<div className='loginFormInputContainer'>
+								<label htmlFor='email' className=''>
+									Email
+								</label>
+								<input
+									type='text'
+									name='email'
+									value={inputValue.email}
+									id='email'
+									className='input-element'
+									onChange={handleInputChange}
+								/>
+							</div>
+							<div className='loginFormInputContainer'>
+								<label htmlFor='password' className=''>
+									Password
+								</label>
+								<input
+									type='text'
+									name='pass'
+									value={inputValue.pass}
+									id='password'
+									className='input-element'
+									onChange={handleInputChange}
+								/>
+							</div>
+							<div className='loginFormButtonContainer'>
+								<a
+									className='button button--primary-2'
+									onClick={loginButtonHandler}
+								>
+									Login
+								</a>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</>
+	)
 }
 
 export default Login

@@ -1,7 +1,7 @@
 export const AuthHeader = {
-    Authorization:
-        'Bearer ' +
-        localStorage.getItem('tocken') +
-        '  ' +
-        localStorage.getItem('userId'),
-};
+	Authorization:
+		'Bearer ' +
+		localStorage.getItem('tocken') +
+		'  ' +
+		localStorage.getItem('userId')
+}

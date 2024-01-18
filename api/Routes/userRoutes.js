@@ -2,9 +2,9 @@ const express = require('express');
 const router = express.Router();
 
 const {
-  postLogData,
-  getLogList, 
-  postProjectName
+	postLogData,
+	getLogList,
+	postProjectName
 } = require('../Controller/userController');
 
 router.get('/log-list', getLogList);

@@ -4,14 +4,14 @@ import React from 'react'
 import './DashboardButton.css'
 
 function DashboardButton(props) {
-  return (
-    <a
-      onClick={props.onClick}
-      className={`${props.className} button--dashboard`}
-    >
-      {props.btnName}
-    </a>
-  )
+	return (
+		<a
+			onClick={props.onClick}
+			className={`${props.className} button--dashboard`}
+		>
+			{props.btnName}
+		</a>
+	)
 }
 
 export default DashboardButton

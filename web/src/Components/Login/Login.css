@@ -1,75 +1,75 @@
 .loginBox {
-  height: 100vh;
+	height: 100vh;
 
-  display: flex;
-  justify-content: center;
-  align-items: center;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 .loginContainer {
-  margin: 0 3.2rem;
-  display: grid;
-  grid-template-columns: 1fr;
+	margin: 0 3.2rem;
+	display: grid;
+	grid-template-columns: 1fr;
 
-  box-shadow: 0 2.4rem 4.8rem rgba(0, 0, 0, 0.03);
-  box-shadow: 0 0.5rem 5rem rgba(51, 155, 240, 0.15);
-  border-radius: 15px;
-  overflow: hidden;
-  padding: 0 0 2.4rem 0;
+	box-shadow: 0 2.4rem 4.8rem rgba(0, 0, 0, 0.03);
+	box-shadow: 0 0.5rem 5rem rgba(51, 155, 240, 0.15);
+	border-radius: 15px;
+	overflow: hidden;
+	padding: 0 0 2.4rem 0;
 }
 
 .loginPageImage {
-  width: 100%;
-  margin-bottom: 2.4rem;
+	width: 100%;
+	margin-bottom: 2.4rem;
 }
 
 .login-heading {
-  text-align: center;
+	text-align: center;
 }
 
 .loginFormInputContainer {
-  display: flex;
-  flex-direction: column;
-  align-items: start;
-  justify-content: center;
-  margin-bottom: 2.4rem;
-  gap: 1rem;
+	display: flex;
+	flex-direction: column;
+	align-items: start;
+	justify-content: center;
+	margin-bottom: 2.4rem;
+	gap: 1rem;
 }
 
 .loginFormInputContainer input {
-  padding: 1rem !important;
+	padding: 1rem !important;
 }
 .loginFormInputContainer label {
-  font-size: 1.4rem;
+	font-size: 1.4rem;
 }
 .loginForm {
-  display: grid;
-  grid-template-columns: 1fr;
+	display: grid;
+	grid-template-columns: 1fr;
 
-  justify-items: center;
+	justify-items: center;
 }
 
 .loginFormButtonContainer {
-  display: flex;
-  justify-content: center;
+	display: flex;
+	justify-content: center;
 }
 .loginButton {
-  padding: 0.6rem 1.2rem;
+	padding: 0.6rem 1.2rem;
 
-  outline: none;
-  border: none;
-  padding: 1rem 1.5rem;
+	outline: none;
+	border: none;
+	padding: 1rem 1.5rem;
 
-  border-radius: 150px;
-  background-color: #339af0;
+	border-radius: 150px;
+	background-color: #339af0;
 
-  color: #f6f6f6;
-  font-weight: 600;
-  letter-spacing: 0.5px;
+	color: #f6f6f6;
+	font-weight: 600;
+	letter-spacing: 0.5px;
 
-  box-shadow: 0 0.5rem 1rem rgba(51, 155, 240, 0.3);
+	box-shadow: 0 0.5rem 1rem rgba(51, 155, 240, 0.3);
 }
 
 .loginFormButtonContainer i {
-  margin-left: 1rem;
+	margin-left: 1rem;
 }

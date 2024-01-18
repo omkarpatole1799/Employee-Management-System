@@ -1,13 +1,13 @@
 .button--dashboard {
-  background-color: var(--main-shade-1);
-  color: var(--grey-tint-1);
-  height: 8rem;
+	background-color: var(--main-shade-1);
+	color: var(--grey-tint-1);
+	height: 8rem;
 
-  font-size: 2rem;
-  transition: 60ms all ease-out;
-  box-shadow: 0 2px 0px 2px var(--grey-tint-1);
+	font-size: 2rem;
+	transition: 60ms all ease-out;
+	box-shadow: 0 2px 0px 2px var(--grey-tint-1);
 }
 .button--dashboard:active {
-  box-shadow: 0 0.5px 0px 0.5px var(--grey-tint-1);
-  transform: translateY(3px);
+	box-shadow: 0 0.5px 0px 0.5px var(--grey-tint-1);
+	transform: translateY(3px);
 }
