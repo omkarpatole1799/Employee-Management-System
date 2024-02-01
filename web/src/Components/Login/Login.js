@@ -60,6 +60,7 @@ function Login() {
 		})
 
 		let data = await res.json()
+
 		if (data.message === 'Not authorized') {
 			dispatch(notifcationActions.showNotification('Not authorized'))
 		}

@@ -1,27 +1,27 @@
 // functions import
-import { useState } from 'react'
+import { useState } from "react"
 
 // HELPER FUNCTION IMPORT
-import { postUserData } from './helpers'
+import { postUserData } from "./helpers"
 
 // components import
-import Button from '../UI/Button/Button'
+import Button from "../UI/Button/Button"
 
 // CSS IMPORT
-import './addEmployee.css'
-import Alert from '../UI/Button/Alert/Alert'
+import "./addEmployee.css"
+import Alert from "../UI/Button/Alert/Alert"
 
 function AddEmployee() {
 	const [input, setInput] = useState({
-		userName: '',
-		emailId: '',
-		password: ''
+		userName: "",
+		emailId: "",
+		password: ""
 	})
 	const [profilePicture, setProfilePicture] = useState(null)
 
 	const [alert, setAlert] = useState({
 		isShow: false,
-		message: ''
+		message: ""
 	})
 
 	const inputChangeHandler = (e) => {
@@ -38,8 +38,8 @@ function AddEmployee() {
 	}
 
 	function isFileTypeAllowed(e) {
-		const fileExtension = e.target.files[0].name.split('.')[1]
-		const allowedFileTypes = ['png', 'jpeg', 'jpg']
+		const fileExtension = e.target.files[0].name.split(".")[1]
+		const allowedFileTypes = ["png", "jpeg", "jpg"]
 		let isMatched = false
 		for (let i of allowedFileTypes) {
 			fileExtension === i && (isMatched = true)
@@ -68,7 +68,7 @@ function AddEmployee() {
 	function submitFormHandler(e) {
 		e.preventDefault()
 		for (let key of Object.entries(input)) {
-			if (key[1] === '') {
+			if (key[1] === "") {
 				let alertMessage = `${key[0].toLocaleLowerCase()} is empty`
 				showAlert(alertMessage)
 				return false
@@ -106,9 +106,31 @@ function AddEmployee() {
 		setTimeout(() => {
 			setAlert({
 				isShow: false,
-				message: ''
+				message: ""
 			})
 		}, 2500)
+	}
+
+	function employeeAddFormHandler(e) {
+		e.preventDefault()
+
+		console.log("submitting")
+		console.log(e.target, "--")
+		let formData = new FormData(e.target)
+		console.log(formData)
+		for (let [key, value] of formData) {
+			console.log(key, value)
+		}
+
+		
+		checkIfEmpty()
+	}
+
+	function checkIfEmpty(_value) {
+		if (_value === '' || _value === undefined || _value === null) {
+			return false
+		}
+		return true
 	}
 
 	return (
@@ -120,6 +142,7 @@ function AddEmployee() {
 					method='POST'
 					className='add-employee-form-container'
 					encType='multipart/form-data'
+					onSubmit={employeeAddFormHandler}
 				>
 					<div className='form-input-group'>
 						<label className='input-label' htmlFor='userName'>
@@ -130,7 +153,6 @@ function AddEmployee() {
 							className='input-element'
 							id='userName'
 							name='userName'
-							onChange={inputChangeHandler}
 						/>
 					</div>
 
@@ -143,7 +165,6 @@ function AddEmployee() {
 							className='input-element'
 							id='emailId'
 							name='emailId'
-							onChange={inputChangeHandler}
 						/>
 					</div>
 					<div className='form-input-group'>
@@ -155,7 +176,6 @@ function AddEmployee() {
 							className='input-element'
 							id='password'
 							name='password'
-							onChange={inputChangeHandler}
 						/>
 					</div>
 
@@ -168,18 +188,16 @@ function AddEmployee() {
 							className=''
 							id='profile-photo'
 							name='profile-photo'
-							onChange={fileChangeHandler}
 						/>
 					</div>
 
 					<div className='add-emp-checkbox-container'>
 						<div className='form-check-group'>
 							<input
-								type='checkbox'
+								type='radio'
 								id='adminCheckbox'
-								value={adminCheckbox}
-								checked={adminCheckbox}
-								onChange={adminCheckboxHandler}
+								name='employeeType'
+								value='admin'
 							/>
 							<label className='input-label' htmlFor='adminCheckbox'>
 								Admin
@@ -187,11 +205,10 @@ function AddEmployee() {
 						</div>
 						<div className='form-check-group'>
 							<input
-								type='checkbox'
+								type='radio'
 								id='employeeCheckBox'
-								value={employeeCheckBox}
-								checked={employeeCheckBox}
-								onChange={employeeCheckBoxHandler}
+								name='employeeType'
+								value='employee'
 							/>
 							<label className='input-label' htmlFor='employeeCheckBox'>
 								Employee
@@ -199,10 +216,7 @@ function AddEmployee() {
 						</div>
 					</div>
 					<div className=''>
-						<Button
-							onClick={submitFormHandler}
-							className='button button--primary'
-						>
+						<Button type='submit' className='button button--primary'>
 							Submit
 						</Button>
 					</div>
