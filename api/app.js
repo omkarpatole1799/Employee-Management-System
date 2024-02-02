@@ -1,7 +1,6 @@
 // packages import
 const express = require('express');
 const fileUpload = require('express-fileupload');
-// const multer = require('multer');
 const cors = require('cors');
 const dotenv = require('dotenv');
 dotenv.config();
@@ -23,25 +22,6 @@ const app = express();
 app.use(cors());
 app.use(fileUpload());
 
-// multer
-// const storage = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     cb(null, 'public/profile-picture');
-//   },
-//   filename: function (req, file, cb) {
-//     let profileImageName = `profilePicture-${
-//       req.body.email.split('@')[0]
-//     }`;
-//     cb(
-//       null,
-//       profileImageName + '.' + file.originalname.split('.')[1]
-//     );
-//   }
-// });
-
-// app.use(
-//   multer({ storage: storage }).single('profilePicture')
-// );
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 

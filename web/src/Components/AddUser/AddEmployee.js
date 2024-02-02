@@ -111,26 +111,26 @@ function AddEmployee() {
 		}, 2500)
 	}
 
-	function employeeAddFormHandler(e) {
+	async function employeeAddFormHandler(e) {
 		e.preventDefault()
-
-		console.log("submitting")
-		console.log(e.target, "--")
 		let formData = new FormData(e.target)
-		console.log(formData)
-		for (let [key, value] of formData) {
-			console.log(key, value)
-		}
 
-		
-		checkIfEmpty()
-	}
+		let resPromise = await fetch("/admin/add-employee", {
+			method: "POST",
+			mode: "cors",
+			headers: {
+				Authorization:
+					"Bearer " +
+					localStorage.getItem("tocken") +
+					" " +
+					localStorage.getItem("userId")
+			},
+			body: formData
+		})
 
-	function checkIfEmpty(_value) {
-		if (_value === '' || _value === undefined || _value === null) {
-			return false
-		}
-		return true
+		let data = await resPromise.json()
+		console.log(data, "add employee response ")
+		showAlert(data.message)
 	}
 
 	return (
@@ -180,14 +180,14 @@ function AddEmployee() {
 					</div>
 
 					<div className='form-input-group'>
-						<label htmlFor='profile-photo' className='input-label'>
+						<label htmlFor='profile-img' className='input-label'>
 							Profile Photo
 						</label>
 						<input
 							type='file'
 							className=''
-							id='profile-photo'
-							name='profile-photo'
+							id='profile-img'
+							name='profileImg'
 						/>
 					</div>
 
