@@ -10,6 +10,9 @@ function checkPathExsists(path) {
 }
 exports.addUser = async (req, res) => {
 	const profileImg = req.files?.profileImg
+
+	const { userName, emailId, password, employeeType } = req.body
+
 	if (profileImg === undefined) {
 		return res.status(400).json({
 			message: "Please add profile image"
@@ -17,19 +20,17 @@ exports.addUser = async (req, res) => {
 	}
 
 	let profileImgPath = "./public/profile-images"
-
-	if (checkPathExsists(profileImgPath)) {
-		profileImg.mv(profileImgPath, (err) => {
-			if (err) {
-				return res.status(500).json({
-					message: "Error saving profile image, please try again later"
-				})
-			}
-		})
+	let fileExtension = profileImg.name.split(".").pop()
+	if (!checkPathExsists(profileImgPath)) {
+		fs.mkdirSync(profileImgPath)
 	}
-
-	const { userName, emailId, password, employeeType } = req.body
-	console.log(req.body)
+	profileImg.mv(`${profileImgPath}/${userName}.${fileExtension}`, (err) => {
+		if (err) {
+			return res.status(500).json({
+				message: "Error saving profile image, please try again later"
+			})
+		}
+	})
 
 	let user = await UserModel.findOne({
 		where: { userEmail: emailId }
@@ -43,21 +44,22 @@ exports.addUser = async (req, res) => {
 
 	let hashedPassword = await hashPassword(password)
 
-	await UserModel.create({
-		userName,
-		userEmail: emailId,
-		password: hashedPassword,
-		userType: employeeType === "admin" ? 1 : 0, // 1 for admin user and 2 for employee user
-		profilePicture: profileImgPath,
-		plain: true
-	}).then((one, affect) => {
-		console.log(affect)
-	})
-	return
-	res.status(201).json({
-		message: "User Created successfully",
-		status: 201
-	})
+	try {
+		await UserModel.create({
+			userName,
+			userEmail: emailId,
+			password: hashedPassword,
+			userType: employeeType === "admin" ? 1 : 0, // 1 for admin user and 2 for employee user
+			profilePicture: profileImgPath
+		})
+		res.status(201).json({
+			message: "User Created successfully"
+		})
+	} catch (error) {
+		return res.status(500).json({
+			message: "Something went wrong while adding details, try again later"
+		})
+	}
 }
 
 async function hashPassword(password) {
@@ -93,9 +95,9 @@ exports.getEmployeeCount = async (req, res) => {
 		let response = await UserModel.findAll({
 			attributes: [
 				[Sequelize.fn("COUNT", Sequelize.col("id")), "total_employees"]
-			],
-			raw: true
+			]
 		})
+		console.log(response)
 		res.status(200).json({
 			call: 1,
 			totalEmployees: response[0]
