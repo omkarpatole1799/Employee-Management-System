@@ -11,8 +11,6 @@ function checkPathExsists(path) {
 exports.addUser = async (req, res) => {
 	const profileImg = req.files?.profileImg
 
-	const { userName, emailId, password, employeeType } = req.body
-
 	if (profileImg === undefined) {
 		return res.status(400).json({
 			message: "Please add profile image"
@@ -21,9 +19,12 @@ exports.addUser = async (req, res) => {
 
 	let profileImgPath = "./public/profile-images"
 	let fileExtension = profileImg.name.split(".").pop()
+
 	if (!checkPathExsists(profileImgPath)) {
 		fs.mkdirSync(profileImgPath)
 	}
+
+	const { userName, emailId, password, employeeType } = req.body
 	profileImg.mv(`${profileImgPath}/${userName}.${fileExtension}`, (err) => {
 		if (err) {
 			return res.status(500).json({
@@ -53,6 +54,7 @@ exports.addUser = async (req, res) => {
 			profilePicture: profileImgPath
 		})
 		res.status(201).json({
+			call: 1,
 			message: "User Created successfully"
 		})
 	} catch (error) {
