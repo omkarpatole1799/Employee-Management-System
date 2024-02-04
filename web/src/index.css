@@ -83,95 +83,36 @@ input {
 
 .container-primary {
 	margin: 0 1.8rem;
-
+	height: 80vh;
 	overflow-x: hidden;
 }
 
 .button {
 	border: none;
-	padding: 0.8rem 1.2rem;
-
-	font-size: 1.8rem;
+	padding: 1rem;
+	font-size: 1.5rem;
 	font-weight: 700;
-	border-radius: 10px;
+	border-radius: 100px;
 	cursor: pointer;
 }
+
 .button--primary-2 {
 	color: var(--main-tint-3);
 	background-color: var(--main-color);
 	transition: 80ms all ease-out;
 	box-shadow: 0 5px 0 1px var(--main-tint-1);
 }
-.button--primary-2:active {
-	background-color: var(--main-tint-2);
-	transform: translateY(3px);
 
-	box-shadow: 0 1px 0 1px var(--main-tint-1);
-	/* font-size: 1.5rem; */
-}
 .button--primary {
 	background-color: var(--main-tint-2);
 	color: #fff;
 	width: 10rem;
-	height: 3rem;
-
 	position: relative;
 }
-.button-pimary:active {
-	background-color: black;
-}
-.button--primary::before,
-.button--primary::after {
-	content: '';
-	position: absolute;
-	top: 0;
-	left: 0;
-	bottom: 0;
-	right: 0;
-	/* background: #0ff; */
-}
-
-.button--primary::before {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-
-	content: '';
-	z-index: 2;
-}
-
-.button--primary:hover::after {
-	content: '';
-	background: rgb(0, 0, 0);
-	z-index: -1;
-	border-radius: 10px;
-	animation: pulse 500ms !important;
-}
-
-@keyframes pulse {
-	0% {
-		transform: scale(0.85);
-		opacity: 1;
-	}
-	50% {
-		transform: scale(0.85);
-		opacity: 0.5;
-	}
-	100% {
-		transform: scale(1.2);
-		opacity: 0;
-	}
-}
-
-/* .button--primary:hover {
-  background-color: var(--main-tint-1);
-  color: #555;
-} */
 
 .button--secondary {
-	box-shadow: inset 0 0 0px 2px var(--main-tint-2);
+	box-shadow: inset 0 0 0px 1px var(--main-tint-2);
 	color: #555;
-
 	position: relative;
 }
 
