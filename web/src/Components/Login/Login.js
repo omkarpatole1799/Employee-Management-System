@@ -100,10 +100,7 @@ function Login() {
 							method='POST'
 							encType='application/json'
 						>
-							<div className='loginFormInputContainer'>
-								<label htmlFor='email' className=''>
-									Email
-								</label>
+							<div className='form-input-group'>
 								<input
 									type='text'
 									name='email'
@@ -111,12 +108,13 @@ function Login() {
 									id='email'
 									className='input-element'
 									onChange={handleInputChange}
+									required
 								/>
-							</div>
-							<div className='loginFormInputContainer'>
-								<label htmlFor='password' className=''>
-									Password
+								<label htmlFor='email' className='input-label'>
+									Email
 								</label>
+							</div>
+							<div className='form-input-group'>
 								<input
 									type='text'
 									name='pass'
@@ -124,7 +122,11 @@ function Login() {
 									id='password'
 									className='input-element'
 									onChange={handleInputChange}
+									required
 								/>
+								<label htmlFor='password' className='input-label'>
+									Password
+								</label>
 							</div>
 							<div className='loginFormButtonContainer'>
 								<a

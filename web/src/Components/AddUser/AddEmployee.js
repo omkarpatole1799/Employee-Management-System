@@ -131,7 +131,6 @@ function AddEmployee() {
 								id='employeeCheckBox'
 								name='employeeType'
 								value='employee'
-								checked
 							/>
 							<label className='input-label' htmlFor='employeeCheckBox'>
 								Employee

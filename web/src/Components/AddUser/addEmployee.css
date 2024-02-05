@@ -17,34 +17,6 @@
 	}
 }
 
-.form-input-group {
-	position: relative;
-
-	display: flex;
-	flex-direction: column;
-	gap: 1.2rem;
-	
-}
-.form-input-group > label {
-	position: absolute;
-
-	top: 47%;
-	left: 7%;
-	transform: translateY(-100%);
-
-	transition: 250ms all ease-in-out;
-}
-
-.form-input-group input:valid + label,
-.form-input-group input:focus + label{
-	font-size: 1rem;
-	top: 15%;
-	left: 4%;
-	background-color: #fff;
-	padding: .25rem 0.5rem;
-}
-
-
 /* CHECK BOXES */
 .form-check-group-container {
 	display: flex;
