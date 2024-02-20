@@ -171,11 +171,9 @@ function AddEmployee() {
 							/>
 						</div>
 					)}
-					<div className='submit-form-btn'>
-						<Button type='submit' className='button button--primary'>
-							Submit
-						</Button>
-					</div>
+					<Button type='submit' className='button button--primary-2'>
+						Submit
+					</Button>
 				</form>
 			</div>
 		</div>

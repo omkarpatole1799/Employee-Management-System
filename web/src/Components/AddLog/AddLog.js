@@ -91,13 +91,12 @@ function AddLog() {
 			<div className='container-primary'>
 				<h3 className='heading-1'>Add Log</h3>
 				<div className='log-form-container'>
-					<form>
+					<form onSubmit={submitLogHandler}>
 						<div className='projct-dropdown'>
 							<select
-								value={projectTitle}
 								id='projectListItems'
 								className=''
-								onChange={dropDownChangeHandler}
+								name='projectName'
 							>
 								<option>Select Project</option>
 								{projectListItems.map((el, i) => {
@@ -121,13 +120,12 @@ function AddLog() {
 								Log Description
 							</label>
 							<textarea
-								value={log}
 								type='text'
 								className=''
 								id='logDescription'
 								name='logDescription'
 								rows='10'
-								onChange={logChangeHandler}
+								required
 							/>
 							<div className={logError ? 'alert alert' : 'alert'}>
 								Please enter log
@@ -136,9 +134,8 @@ function AddLog() {
 
 						<div className='add-log-button-container'>
 							<Button
-								onClick={submitLogHandler}
-								type='button'
 								className='button button--primary'
+								type='submit'
 							>
 								Submit
 							</Button>
@@ -146,13 +143,10 @@ function AddLog() {
 							<Button
 								onClick={() => navigate('/log-list')}
 								className='button button--secondary'
+								type='button'
 							>
 								Log list
 							</Button>
-						</div>
-
-						<div className={logStatus ? 'alert alert' : 'alert'}>
-							Log Added Successfully
 						</div>
 					</form>
 				</div>
