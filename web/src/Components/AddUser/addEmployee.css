@@ -1,21 +1,8 @@
 .add-employee-form-container {
 	display: grid;
 	grid-template-columns: 1fr;
-
-
 }
 
-.submit-form-btn {
-	/* position: relative; 	 */
-	/* text-align: center; */
-
-	& button {
-		/* bottom: 7rem; */
-		/* left: 50%; */
-		/* transform: translateX(-50%); */
-		/* position:absolute;  */
-	}
-}
 
 /* CHECK BOXES */
 .form-check-group-container {
@@ -40,11 +27,9 @@
 		border: 1px solid var(--main-color);
 		height: 3rem;
 		width: 10rem;
-		border-radius: 5px;
+		border-radius: 4px;
 		padding: 6px !important;
-
 		transition: 300ms all ease-in-out;
-
 		
 		&:checked {
 			background: var(--main-tint-2);

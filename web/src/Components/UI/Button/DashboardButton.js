@@ -1,16 +1,16 @@
-import React from 'react'
+import React from "react"
+import { Link } from "react-router-dom"
 
-// CSS IMPORT
-import './DashboardButton.css'
+import "./DashboardButton.css"
 
 function DashboardButton(props) {
 	return (
-		<a
+		<Link
 			onClick={props.onClick}
-			className={`${props.className} button--dashboard`}
+			className={`${props.className} button--primary button--dashboard`}
 		>
 			{props.btnName}
-		</a>
+		</Link>
 	)
 }
 

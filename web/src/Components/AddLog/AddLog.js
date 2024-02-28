@@ -107,9 +107,6 @@ function AddLog() {
 									)
 								})}
 							</select>
-							<div className={projectTitleError ? 'alert alert' : 'alert'}>
-								Please select project title
-							</div>
 						</div>
 
 						<div className='log-description'>
@@ -127,9 +124,6 @@ function AddLog() {
 								rows='10'
 								required
 							/>
-							<div className={logError ? 'alert alert' : 'alert'}>
-								Please enter log
-							</div>
 						</div>
 
 						<div className='add-log-button-container'>
@@ -142,7 +136,7 @@ function AddLog() {
 
 							<Button
 								onClick={() => navigate('/log-list')}
-								className='button button--secondary'
+								className='button btn--secondary'
 								type='button'
 							>
 								Log list
