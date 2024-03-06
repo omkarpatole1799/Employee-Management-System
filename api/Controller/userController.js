@@ -1,7 +1,7 @@
 // adding user logs
 const sequelize = require('sequelize');
-const UserLog = require('../Model/logDataModel');
-const projectList = require('../Model/projectListModel');
+const UserLog = require('../Model/user_log');
+const projectList = require('../Model/project_list');
 exports.postLogData = async (req, res) => {
 	const { log, projectTitle } = req.body;
 	const userId = req.userId;

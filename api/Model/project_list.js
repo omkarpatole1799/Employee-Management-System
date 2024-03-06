@@ -1,8 +1,8 @@
 const sequelize = require('../Utils/database');
 const { INTEGER, STRING } = require('sequelize');
 
-const projectListModel = sequelize.define(
-	'projectListModel',
+const project_list = sequelize.define(
+	'project_list',
 	{
 		id: {
 			type: INTEGER,
@@ -18,4 +18,4 @@ const projectListModel = sequelize.define(
 	{ createdAt: false, updatedAt: false }
 );
 
-module.exports = projectListModel;
+module.exports = project_list;

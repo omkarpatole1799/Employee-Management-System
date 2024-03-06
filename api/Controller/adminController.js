@@ -1,5 +1,5 @@
 const fs = require("fs")
-const UserModel = require("../Model/userModel")
+const UserModel = require("../Model/user")
 const bcrypt = require("bcryptjs")
 const dotenv = require("dotenv")
 const sequelize = require("../Utils/database")

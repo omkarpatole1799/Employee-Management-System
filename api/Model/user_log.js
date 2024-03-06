@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const sequelize = require('../Utils/database');
 
-const UserLog = sequelize.define('UserLog', {
+const user_log = sequelize.define('user_log', {
 	id: {
 		type: Sequelize.INTEGER,
 		autoIncrement: true,
@@ -18,4 +18,4 @@ const UserLog = sequelize.define('UserLog', {
 	}
 });
 
-module.exports = UserLog;
+module.exports = user_log;
