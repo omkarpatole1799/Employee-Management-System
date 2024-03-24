@@ -34,11 +34,11 @@ app.use(function (req, res) {
 })
 
 // sequelize associations
+user.hasMany(user_log)
 user_log.belongsTo(user, {
 	constraints: true,
 	onDelete: "CASCADE"
 })
-user.hasMany(user_log)
 
 sequelize
 	// .sync({ force: true })

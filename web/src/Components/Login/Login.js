@@ -45,40 +45,40 @@ function Login() {
 	}
 
 	const loginRequestHandler = async (email, pass) => {
-		dispatch(loaderActions.showLoader())
-		const res = await fetch("/auth/login", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json"
-			},
-			body: JSON.stringify({ userEmail: email, pass })
-		})
+		try {
+			dispatch(loaderActions.showLoader())
+			const res = await fetch("/auth/login", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json"
+				},
+				body: JSON.stringify({ userEmail: email, pass })
+			})
 
-		let data = await res.json()
+			let data = await res.json()
 
-		if (data.message === "Not authorized") {
-			dispatch(notifcationActions.showNotification("Not authorized"))
-		}
+			console.log(data.error,'-data')
 
-		if (data.message === "authenticated") {
-			localStorage.setItem("tocken", data.tocken)
-			let expiration = new Date()
-			expiration.setHours(expiration.getHours() + 10)
-			localStorage.setItem("tockenExpiry", expiration.toISOString())
-			localStorage.setItem("userId", data.userId)
-			localStorage.setItem("userName", data.userName)
-			localStorage.setItem("userType", data.userType)
+			if (data?.error) {
+				throw new Error(data.error)
+			}
 
+			if (data.message === "authenticated") {
+				localStorage.setItem("tocken", data.tocken)
+				let expiration = new Date()
+				expiration.setHours(expiration.getHours() + 10)
+				localStorage.setItem("tockenExpiry", expiration.toISOString())
+				localStorage.setItem("userId", data.userId)
+				localStorage.setItem("userName", data.userName)
+				localStorage.setItem("userType", data.userType)
+
+				dispatch(loaderActions.hideLoader())
+				navigate("/")
+			}
+		} catch (error) {
+			dispatch(notifcationActions.showNotification(`${error}`))
+		} finally {
 			dispatch(loaderActions.hideLoader())
-			navigate("/")
-		}
-
-		if (data.message === "Incorret Password") {
-			dispatch(notifcationActions.showNotification("Incorrect password"))
-		}
-
-		if (data.message === "Incorrect Email") {
-			dispatch(notifcationActions.showNotification("Incorrect Email"))
 		}
 	}
 

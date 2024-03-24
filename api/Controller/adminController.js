@@ -1,51 +1,61 @@
 const fs = require("fs")
-const UserModel = require("../Model/user")
-const bcrypt = require("bcryptjs")
 const dotenv = require("dotenv")
-const sequelize = require("../Utils/database")
+const bcrypt = require("bcryptjs")
 const Sequelize = require("sequelize")
 dotenv.config()
+
+const sequelize = require("../Utils/database")
+const UserModel = require("../Model/user")
+
 function checkPathExsists(path) {
 	return fs.existsSync(path)
 }
+
+function checkIfEmpty(value, name) {
+	if (!value || value === undefined || value === null) {
+		throw new Error(`Please add ${name}`)
+	}
+}
+
 exports.addUser = async (req, res) => {
-	const profileImg = req.files?.profileImg
-
-	if (profileImg === undefined) {
-		return res.status(400).json({
-			message: "Please add profile image"
-		})
-	}
-
-	let profileImgPath = "./public/profile-images"
-	let fileExtension = profileImg.name.split(".").pop()
-
-	if (!checkPathExsists(profileImgPath)) {
-		fs.mkdirSync(profileImgPath)
-	}
-
-	const { userName, emailId, password, employeeType } = req.body
-	profileImg.mv(`${profileImgPath}/${userName}.${fileExtension}`, (err) => {
-		if (err) {
-			return res.status(500).json({
-				message: "Error saving profile image, please try again later"
-			})
-		}
-	})
-
-	let user = await UserModel.findOne({
-		where: { userEmail: emailId }
-	})
-
-	if (user) {
-		return res.status(409).json({
-			message: "Email already exsist"
-		})
-	}
-
-	let hashedPassword = await hashPassword(password)
-
 	try {
+		const { userName, emailId, password, employeeType } = req.body
+
+		checkIfEmpty(userName, "User name")
+		checkIfEmpty(emailId, "Email")
+		checkIfEmpty(password, "Password")
+		checkIfEmpty(employeeType, "Employee Type")
+
+		let user = await UserModel.findOne({
+			where: { userEmail: emailId }
+		})
+
+		if (user) {
+			res.status(409)
+			throw new Error("Email already exsist")
+		}
+
+		const profileImg = req.files?.profileImg
+		if (!profileImg) {
+			res.status(400)
+			throw new Error("Please add profile image")
+		}
+
+		let hashedPassword = await hashPassword(password)
+
+		let profileImgPath = `./public/profile-images`
+		let fileExtension = profileImg.name.split(".").pop()
+
+		if (!checkPathExsists(profileImgPath)) {
+			fs.mkdirSync(profileImgPath)
+		}
+
+		profileImg.mv(`${profileImgPath}/${userName}.${fileExtension}`, err => {
+			if (err) {
+				throw new Error("Error saving profile image, please try again later")
+			}
+		})
+
 		await UserModel.create({
 			userName,
 			userEmail: emailId,
@@ -53,13 +63,13 @@ exports.addUser = async (req, res) => {
 			userType: employeeType === "admin" ? 1 : 0, // 1 for admin user and 2 for employee user
 			profilePicture: profileImgPath
 		})
-		res.status(201).json({
-			call: 1,
+
+		return res.status(201).json({
 			message: "User Created successfully"
 		})
 	} catch (error) {
-		return res.status(500).json({
-			message: "Something went wrong while adding details, try again later"
+		return res.json({
+			error: error.message
 		})
 	}
 }
