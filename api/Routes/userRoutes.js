@@ -5,7 +5,7 @@ const {
 	postLogData,
 	getLogList,
 	postProjectName
-} = require('../Controller/userController');
+} = require('../controllers/userController');
 
 router.get('/log-list', getLogList);
 

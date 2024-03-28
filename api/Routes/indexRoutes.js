@@ -4,7 +4,7 @@ const router = express.Router();
 const authRoutes = require('./authRoutes');
 const adminRoutes = require('./adminRoutes');
 const userRoutes = require('./userRoutes');
-const isAuth = require('../middleware/is-auth');
+const isAuth = require('../middlewares/is-auth');
 
 // ROUTES
 router.get('/', (req, res) => {

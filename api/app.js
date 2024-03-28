@@ -6,14 +6,14 @@ const dotenv = require("dotenv")
 dotenv.config()
 
 // files import
-const indexRoutes = require("./Routes/indexRoutes")
-const sequelize = require("./Utils/database")
+const indexRoutes = require("./routes/indexRoutes")
+const sequelize = require("./utils/database")
 
 // sequelize models import
-const user = require("./Model/user")
-const user_log = require("./Model/user_log")
-const attendance = require("./Model/attendance")
-const project_list = require("./Model/project_list")
+const user = require("./models/user")
+const user_log = require("./models/user_log")
+const attendance = require("./models/attendance")
+const project_list = require("./models/project_list")
 
 const app = express()
 
@@ -30,6 +30,15 @@ app.use(function (req, res) {
 	res.status(404).send({
 		message: "Route Not found",
 		status: 404
+	})
+})
+
+app.use((err, req, res, next) => {
+	console.log('HERE=====================')
+	return res.status(err.status).json({
+		status: err.status,
+		message: err.message,
+		stack: err.stack
 	})
 })
 
@@ -54,7 +63,7 @@ sequelize
 		})
 	})
 	.then(_user => {
-		console.log(_user,'---')
+		console.log(_user, "---")
 		if (_user === null) {
 			user.create({
 				userName: "1",

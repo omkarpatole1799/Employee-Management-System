@@ -1,4 +1,4 @@
-const sequelize = require('../Utils/database');
+const sequelize = require('../utils/database');
 const { INTEGER, STRING } = require('sequelize');
 
 const project_list = sequelize.define(

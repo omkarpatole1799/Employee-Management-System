@@ -1,14 +1,30 @@
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 
-const UserModel = require("../Model/user")
+const UserModel = require("../models/user")
+const {
+	EMAIL_NOT_MATCH,
+	PASS_NOT_MATCH,
+	EMAIL_MISSING,
+	PASS_MISSING,
+	EMAIL_EXSIST
+} = require("../utils/statusMessages")
 
 exports.postUserLogin = async function (req, res) {
 	const { userEmail, pass: enteredPassword } = req.body
-	console.log(req.body, "in api")
-	console.log(req.body)
 
 	try {
+		if (!userEmail || userEmail == "") {
+			let error = new Error(EMAIL_MISSING)
+			error.status = 400
+
+		}
+
+		if (!enteredPassword || enteredPassword == "") {
+			res.status(400)
+			throw new Error(PASS_MISSING)
+		}
+
 		let user = await UserModel.findOne({
 			where: {
 				userEmail
@@ -25,13 +41,15 @@ exports.postUserLogin = async function (req, res) {
 
 		if (user === null || user === undefined) {
 			// res.status(404)
-			throw new Error("Email not match")
+			throw new Error(EMAIL_NOT_MATCH)
 		}
 		console.log(user, "==user")
 		let isMatch = bcrypt.compare(enteredPassword, user.userPassword)
 		if (!isMatch) {
 			res.status(401)
-			throw new Error("Password not match")
+			let err = new Error()
+			err.message = PASS_NOT_MATCH
+			err.status = 401
 		}
 
 		let token = await jwt.sign(
@@ -51,9 +69,11 @@ exports.postUserLogin = async function (req, res) {
 			userType: user.userType
 		})
 	} catch (error) {
-		console.log(error)
+		console.log(error.status)
 		return res.json({
-			error: error.message
+			status: error.status,
+			error: error.message,
+			stack: error.stack
 		})
 	}
 }

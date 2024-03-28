@@ -1,11 +1,20 @@
 const fs = require("fs")
+const fsPromises = fs.promises
+const path = require("path")
 const dotenv = require("dotenv")
 const bcrypt = require("bcryptjs")
 const Sequelize = require("sequelize")
 dotenv.config()
 
-const sequelize = require("../Utils/database")
-const UserModel = require("../Model/user")
+const sequelize = require("../utils/database")
+const UserModel = require("../models/user")
+const { ADMIN, EMPLOYEE } = require("../utils/constants")
+const {
+	EMAIL_EXSIST,
+	MISSING_PROFILE_IMG,
+	SUCCESS_CREATE_USER,
+	INVALID_USERNAME
+} = require("../utils/statusMessages")
 
 function checkPathExsists(path) {
 	return fs.existsSync(path)
@@ -17,11 +26,23 @@ function checkIfEmpty(value, name) {
 	}
 }
 
-exports.addUser = async (req, res) => {
+exports.addUser = async (req, res, next) => {
 	try {
 		const { userName, emailId, password, employeeType } = req.body
 
-		checkIfEmpty(userName, "User name")
+		// let userNameRegEx = new RegExp(/^[a-zA-Z]|[a-zA-Z]$|[a-zA-Z]/g)
+		// let userNameRegEx = new RegExp(/^[a-z]|[a-z]$|[a-z]|[A-Z]|^[A-Z]|[A-Z]$/g)
+		let userNameRegEx = new RegExp(/[^a-zA-Z0-9]/g)
+		console.log(userNameRegEx.test(userName.trim()))
+		if (userNameRegEx.test(userName.trim())) {
+			throw new Error(INVALID_USERNAME)
+		} else {
+			console.log("here")
+		}
+		return
+
+		let passwordRegEx = new RegExp(/^[a-z]|^[A-Z]|^[0-9]/i)
+
 		checkIfEmpty(emailId, "Email")
 		checkIfEmpty(password, "Password")
 		checkIfEmpty(employeeType, "Employee Type")
@@ -32,13 +53,13 @@ exports.addUser = async (req, res) => {
 
 		if (user) {
 			res.status(409)
-			throw new Error("Email already exsist")
+			throw new Error(EMAIL_EXSIST)
 		}
 
 		const profileImg = req.files?.profileImg
 		if (!profileImg) {
 			res.status(400)
-			throw new Error("Please add profile image")
+			throw new Error(MISSING_PROFILE_IMG)
 		}
 
 		let hashedPassword = await hashPassword(password)
@@ -47,7 +68,7 @@ exports.addUser = async (req, res) => {
 		let fileExtension = profileImg.name.split(".").pop()
 
 		if (!checkPathExsists(profileImgPath)) {
-			fs.mkdirSync(profileImgPath)
+			await fsPromises.mkdir(profileImgPath, { recursive: true })
 		}
 
 		profileImg.mv(`${profileImgPath}/${userName}.${fileExtension}`, err => {
@@ -60,16 +81,17 @@ exports.addUser = async (req, res) => {
 			userName,
 			userEmail: emailId,
 			password: hashedPassword,
-			userType: employeeType === "admin" ? 1 : 0, // 1 for admin user and 2 for employee user
+			userType: employeeType === "admin" ? ADMIN : EMPLOYEE, // 1 for admin user and 2 for employee user
 			profilePicture: profileImgPath
 		})
 
 		return res.status(201).json({
-			message: "User Created successfully"
+			message: SUCCESS_CREATE_USER
 		})
 	} catch (error) {
 		return res.json({
-			error: error.message
+			status: res.status,
+			message: error.message
 		})
 	}
 }
@@ -140,11 +162,34 @@ exports.getEmployeeList = async function (req, res, next) {
 exports.deleteEmployee = async function (req, res) {
 	try {
 		let empId = req.body.empId
+		if (!empId) {
+			throw new Error("Please mention employee ID")
+		}
+
+		let emp = await UserModel.findOne({
+			where: {
+				id: empId
+			},
+			raw: true
+		})
+		console.log(emp, "-emp")
+
+		if (!emp) {
+			throw new Error("Wrong employee ID")
+		}
+
 		let deleteEmployee = await UserModel.destroy({
 			where: {
 				id: empId
 			}
 		})
+
+		console.log(deleteEmployee, "-demp")
+		if (deleteEmployee === 1) {
+			return res.status(200).json({
+				message: `Employee deleted successfully. Emp ID - ${empId}`
+			})
+		}
 	} catch (error) {
 		returnError(res, error)
 	}
@@ -154,8 +199,7 @@ exports.deleteEmployee = async function (req, res) {
 // COMMON FUNCTIONS
 // ********************************************
 function returnError(res, error) {
-	return res.status(500).json({
-		call: 0,
-		data: error
+	return res.json({
+		error: error.message
 	})
 }

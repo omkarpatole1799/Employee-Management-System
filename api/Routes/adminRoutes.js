@@ -5,7 +5,7 @@ const {
 	getEmployeeCount,
 	getEmployeeList,
 	deleteEmployee
-} = require('../Controller/adminController');
+} = require('../controllers/adminController');
 
 // ADD EMPLOYEE
 router.post('/add-employee', addUser);
