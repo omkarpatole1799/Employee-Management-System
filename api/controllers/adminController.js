@@ -8,44 +8,34 @@ dotenv.config()
 
 const sequelize = require("../utils/database")
 const UserModel = require("../models/user")
-const { ADMIN, EMPLOYEE } = require("../utils/constants")
+const { ADMIN, EMPLOYEE, PROFILE_IMG_PATH } = require("../utils/constants")
 const {
 	EMAIL_EXSIST,
 	MISSING_PROFILE_IMG,
 	SUCCESS_CREATE_USER,
-	INVALID_USERNAME
-} = require("../utils/statusMessages")
-
-function checkPathExsists(path) {
-	return fs.existsSync(path)
-}
-
-function checkIfEmpty(value, name) {
-	if (!value || value === undefined || value === null) {
-		throw new Error(`Please add ${name}`)
-	}
-}
+	INVALID_USERNAME,
+	INVALID_EMP_TYPE,
+	INVALID_PASS,
+	E_SIGN_UP
+} = require("../utils/statusMessages.js")
 
 exports.addUser = async (req, res, next) => {
 	try {
 		const { userName, emailId, password, employeeType } = req.body
 
-		// let userNameRegEx = new RegExp(/^[a-zA-Z]|[a-zA-Z]$|[a-zA-Z]/g)
-		// let userNameRegEx = new RegExp(/^[a-z]|[a-z]$|[a-z]|[A-Z]|^[A-Z]|[A-Z]$/g)
-		let userNameRegEx = new RegExp(/[^a-zA-Z0-9]/g)
-		console.log(userNameRegEx.test(userName.trim()))
-		if (userNameRegEx.test(userName.trim())) {
-			throw new Error(INVALID_USERNAME)
-		} else {
-			console.log("here")
+		let userNameRegEx = new RegExp(/^[a-zA-Z0-9]{2,}$/g)
+
+		let isUserNameValid = userNameRegEx.test(userName)
+
+		if (!isUserNameValid) throw new Error(INVALID_USERNAME)
+
+		if (+employeeType !== ADMIN && +employeeType !== EMPLOYEE) {
+			throw new Error(INVALID_EMP_TYPE)
 		}
-		return
 
-		let passwordRegEx = new RegExp(/^[a-z]|^[A-Z]|^[0-9]/i)
-
-		checkIfEmpty(emailId, "Email")
-		checkIfEmpty(password, "Password")
-		checkIfEmpty(employeeType, "Employee Type")
+		let passwordRegEx = new RegExp(/^[a-zA-Z0-9@#%&!]{8,}$/g)
+		let isPasswordValid = passwordRegEx.test(password)
+		if (!isPasswordValid) throw new Error(INVALID_PASS)
 
 		let user = await UserModel.findOne({
 			where: { userEmail: emailId }
@@ -64,60 +54,63 @@ exports.addUser = async (req, res, next) => {
 
 		let hashedPassword = await hashPassword(password)
 
-		let profileImgPath = `./public/profile-images`
-		let fileExtension = profileImg.name.split(".").pop()
-
-		if (!checkPathExsists(profileImgPath)) {
-			await fsPromises.mkdir(profileImgPath, { recursive: true })
-		}
-
-		profileImg.mv(`${profileImgPath}/${userName}.${fileExtension}`, err => {
-			if (err) {
-				throw new Error("Error saving profile image, please try again later")
-			}
-		})
-
-		await UserModel.create({
+		let _createdUser = await UserModel.create({
 			userName,
 			userEmail: emailId,
 			password: hashedPassword,
 			userType: employeeType === "admin" ? ADMIN : EMPLOYEE, // 1 for admin user and 2 for employee user
-			profilePicture: profileImgPath
+			profilePicture: ""
 		})
+		console.log(_createdUser.get({ plain: true }), "cuser")
+		if (!_createdUser) {
+			throw new Error(E_SIGN_UP)
+		}
+
+		let profileImgName = await saveProfileImage(profileImg, _createdUser.id)
+
+		_createdUser.profilePicture = profileImgName
+
+		await _createdUser.save()
 
 		return res.status(201).json({
 			message: SUCCESS_CREATE_USER
 		})
 	} catch (error) {
-		return res.json({
-			status: res.status,
-			message: error.message
-		})
+		next(error)
 	}
 }
 
 async function hashPassword(password) {
-	// RETURNS hashedPassword
 	return await bcrypt.hash(password, 12)
 }
 
-async function createUser(
-	userName,
-	userEmail,
-	hashedPassword,
-	userType,
-	profilePicture
-) {
-	// RETURN CREATE USER
-	return (
-		await UserModel.create({
-			userName,
-			userEmail,
-			password: hashedPassword,
-			userType, // 1 for admin user and 2 for employee user
-			profilePicture
+async function saveProfileImage(profileImg, userId) {
+	let path = PROFILE_IMG_PATH
+	if (!checkPathExsists(path)) {
+		await fsPromises.mkdir(path, { recursive: true })
+	}
+
+	let profileImgName = `${userId}.${getFileExtension(profileImg.name)}`
+
+	let _fileMvRes = await moveFile(path, profileImgName, profileImg)
+
+	return profileImgName
+}
+
+function moveFile(path, fileName, file) {
+	return new Promise((resolve, reject) => {
+		file.mv(`${path}/${fileName}`, err => {
+			err ? reject(err) : resolve(true)
 		})
-	).get({ plain: true })
+	})
+}
+
+function getFileExtension(fileName) {
+	return fileName.split(".").pop()
+}
+
+function checkPathExsists(path) {
+	return fs.existsSync(path)
 }
 
 // ********************************************

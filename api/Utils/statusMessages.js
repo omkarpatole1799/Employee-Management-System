@@ -15,3 +15,9 @@ exports.PASS_NOT_MATCH = "Password not match"
 exports.EMAIL_MISSING = "Please enter email ID"
 
 exports.PASS_MISSING = "Please enter password"
+
+exports.INVALID_EMP_TYPE = "Invalid employee type"
+
+exports.INVALID_PASS = "Invalid Password"
+
+exports.E_SIGN_UP = "Error signing up, try again later"
