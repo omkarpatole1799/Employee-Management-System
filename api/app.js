@@ -33,12 +33,11 @@ app.use(function (req, res) {
 	})
 })
 
-app.use((err, req, res, next) => {
-	console.log('HERE=====================')
-	return res.status(err.status).json({
-		status: err.status,
-		message: err.message,
-		stack: err.stack
+app.use((error, req, res, next) => {
+	res.status(error.code || 500).json({
+		status: error.code || 500,
+		message: error.message || "Something went wrong",
+		stack: error.stack || {}
 	})
 })
 

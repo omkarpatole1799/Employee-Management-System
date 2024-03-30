@@ -1,23 +1,24 @@
-exports.EMAIL_EXSIST = "Email already exsist"
+exports.E_EMAIL_EXSIST = "Email already exsist"
 
-exports.INVALID_USERNAME = "Invalid user name"
+exports.E_INVALID_USERNAME = "Invalid user name"
 
-exports.MISSING_PROFILE_IMG = "Please add profile image"
+exports.E_MISSING_PROFILE_IMG = "Please add profile image"
+exports.E_FILE_TYPE_NOT_ALLOWED = "Only JPG, JPEG, PNG files allowed"
 
-exports.PROFILE_IMG_SAVE_ERR =
+exports.E_PROFILE_IMG_SAVE_ERR =
 	"Error saving profile image, please try again later"
 
-exports.SUCCESS_CREATE_USER = "User created successfully"
+exports.E_EMAIL_NOT_MATCH = "Email not match"
+exports.E_PASS_NOT_MATCH = "Password not match"
 
-exports.EMAIL_NOT_MATCH = "Email not match"
-exports.PASS_NOT_MATCH = "Password not match"
+exports.E_EMAIL_MISSING = "Please enter email ID"
 
-exports.EMAIL_MISSING = "Please enter email ID"
+exports.E_PASS_MISSING = "Please enter password"
 
-exports.PASS_MISSING = "Please enter password"
+exports.E_INVALID_EMP_TYPE = "Invalid employee type"
 
-exports.INVALID_EMP_TYPE = "Invalid employee type"
-
-exports.INVALID_PASS = "Invalid Password"
+exports.E_INVALID_PASS = "Invalid Password"
 
 exports.E_SIGN_UP = "Error signing up, try again later"
+
+exports.S_CREATE_USER = "User created successfully"
