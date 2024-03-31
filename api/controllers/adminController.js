@@ -73,7 +73,7 @@ exports.addUser = async (req, res, next) => {
 			userType: employeeType === ADMIN ? ADMIN : EMPLOYEE, // 1 for admin user and 2 for employee user
 			profilePicture: ""
 		})
-		console.log(_createdUser.get({ plain: true }), "cuser")
+
 		if (!_createdUser) {
 			throwError(E_SIGN_UP, 424)
 		}
