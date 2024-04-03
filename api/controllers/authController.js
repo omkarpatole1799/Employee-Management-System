@@ -2,32 +2,20 @@ const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 
 const UserModel = require("../models/user")
-const {
-	EMAIL_NOT_MATCH,
-	PASS_NOT_MATCH,
-	EMAIL_MISSING,
-	PASS_MISSING,
-	EMAIL_EXSIST
-} = require("../utils/statusMessages")
+const STATUS = require("../utils/statusMessages.js")
+const { throwError } = require("../utils/help.js")
 
-exports.postUserLogin = async function (req, res) {
-	const { userEmail, pass: enteredPassword } = req.body
+exports.postUserLogin = async function (req, res, next) {
+	const { email, password } = req.body
 
 	try {
-		if (!userEmail || userEmail == "") {
-			let error = new Error(EMAIL_MISSING)
-			error.status = 400
-
-		}
-
-		if (!enteredPassword || enteredPassword == "") {
-			res.status(400)
-			throw new Error(PASS_MISSING)
+		if (!email || email == "" || !password || password == "") {
+			throwError(STATUS.E_INVALID_CREDENTIALS, 403)
 		}
 
 		let user = await UserModel.findOne({
 			where: {
-				userEmail
+				userEmail: email
 			},
 			attributes: [
 				["userName", "userName"],
@@ -40,21 +28,18 @@ exports.postUserLogin = async function (req, res) {
 		})
 
 		if (user === null || user === undefined) {
-			// res.status(404)
-			throw new Error(EMAIL_NOT_MATCH)
+			throwError(STATUS.E_INVALID_CREDENTIALS, 403)
 		}
-		console.log(user, "==user")
-		let isMatch = bcrypt.compare(enteredPassword, user.userPassword)
+
+		let isMatch = await bcrypt.compare(password, user.userPassword)
+
 		if (!isMatch) {
-			res.status(401)
-			let err = new Error()
-			err.message = PASS_NOT_MATCH
-			err.status = 401
+			throwError(STATUS.E_INVALID_CREDENTIALS, 403)
 		}
 
 		let token = await jwt.sign(
 			{
-				userEmail,
+				userEmail: email,
 				userId: user.id
 			},
 			`${process.env.JWT_SECRET}`,
@@ -69,11 +54,6 @@ exports.postUserLogin = async function (req, res) {
 			userType: user.userType
 		})
 	} catch (error) {
-		console.log(error.status)
-		return res.json({
-			status: error.status,
-			error: error.message,
-			stack: error.stack
-		})
+		next(error)
 	}
 }

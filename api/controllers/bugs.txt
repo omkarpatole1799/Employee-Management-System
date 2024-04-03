@@ -1,0 +1,29 @@
+[x] What does `checkIfEmpty` do, if e.g. `userName` is empty?
+[x] You're not checking `userName` for weird characters. You're using it as part of a file path, so hopefully it doesn't contain something bad.
+[x] `fileExtension` might be empty.
+[x] If `await UserModel.create`, your comment doesn't match your code.
+[x] The comment for `userType` doesn't match the code. 🤦‍♀️ Perhaps you should use named constants to solve this problem.
+[x] `profilePicture` is `profileImgPath`, i.e. the directory, not the image file.
+[x] You're not consistently using HTTP status codes to communicate errors. Sometimes you use a 4xx status code, and sometimes you use 200 (default).
+[x] `fs.mkdirSync` is out of place. Why not `fs.promises.mkdir`?
+[x] 🚨 Major security bug: You don't require any particular format for user names, so I could create a user name like `../../../var/log/apache` or something and start to steal your server's secrets
+[x] Bug: You don't want for `mv` to succeed before reporting success. The `mv` could fail.
+[x] The value of `profilePicture` you store in your database looks wrong. I'm guessing you didn't test this...
+
+[!] Bug: If `mv` fails, you'll crash the server. The `throw` will bubble up to the top of the event loop. - I should try other method to move the file not use the express.js `.mv` method
+	
+
+[!] 🚨 Major security bug: You allow anyone to create admin accounts. - what can be done? (how to allow specific people to create admin accounts only)
+
+[!] What happens if I create two users with the same name at the same time? - What should be done(not able to find any answers)
+	- implemented through transactions
+
+[x] For security reasons, you shouldn't expose the raw error message to users. If you're unsure, show a generic message instead. (You also have a typo in your error messages.) - did'nt understand - fixed the typo though
+	-explanation
+
+	Exposing a raw message could also be something like giving the user one error message if the username doesn't exist and another error message if the password is wrong for that username, when someone is trying to log in.
+
+	If I'm trying to hack your system, "unknown user" tells me right away not to try the username again and try the next one instead.
+	If I instead get a more generic "wrong username or password", if the username doesn't exist OR if the password is wrong, I don't gain any additional information about which usernames exists or not on your system.
+
+	You would, of course, still log different error messages in your own logfiles for those two cases.

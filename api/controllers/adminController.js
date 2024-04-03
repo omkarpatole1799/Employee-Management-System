@@ -1,68 +1,59 @@
 const fs = require("fs")
 const fsPromises = fs.promises
-const path = require("path")
+
 const dotenv = require("dotenv")
 const bcrypt = require("bcryptjs")
 const Sequelize = require("sequelize")
 dotenv.config()
 
-const sequelize = require("../utils/database")
 const UserModel = require("../models/user")
-const {
-	ADMIN,
-	EMPLOYEE,
-	PROFILE_IMG_PATH,
-	PNG,
-	JPEG,
-	JPG
-} = require("../utils/constants")
-const {
-	E_EMAIL_EXSIST,
-	E_MISSING_PROFILE_IMG,
-	S_CREATE_USER,
-	E_INVALID_USERNAME,
-	E_INVALID_EMP_TYPE,
-	E_INVALID_PASS,
-	E_SIGN_UP,
-	E_FILE_TYPE_NOT_ALLOWED
-} = require("../utils/statusMessages.js")
+const CONSTS = require("../utils/constants")
+
+const STATUS = require("../utils/statusMessages.js")
+
 const { throwError } = require("../utils/help.js")
 
 exports.addUser = async (req, res, next) => {
 	try {
+		console.log(req.body, "req.body")
 		const { userName, emailId, password, employeeType } = req.body
 
 		let userNameRegEx = new RegExp(/^[a-zA-Z0-9]{2,}$/g)
-
 		let isUserNameValid = userNameRegEx.test(userName)
+		if (!isUserNameValid) throwError(STATUS.E_INVALID_USERNAME, 400)
 
-		if (!isUserNameValid) throwError(E_INVALID_USERNAME, 400)
-
-		if (+employeeType !== ADMIN && +employeeType !== EMPLOYEE) {
-			throwError(E_INVALID_EMP_TYPE, 400)
-		}
-
-		let passwordRegEx = new RegExp(/^[a-zA-Z0-9@#%&!]{8,}$/g)
+		let passwordRegEx = new RegExp(/^[\x20-\x7E]{8,}$/g)
 		let isPasswordValid = passwordRegEx.test(password)
-		if (!isPasswordValid) throwError(E_INVALID_PASS, 400)
+		if (!isPasswordValid) throwError(STATUS.E_INVALID_PASS, 400)
+
+		if (+employeeType !== CONSTS.ADMIN && +employeeType !== CONSTS.EMPLOYEE) {
+			throwError(STATUS.E_INVALID_EMP_TYPE, 400)
+		}
 
 		let user = await UserModel.findOne({
 			where: { userEmail: emailId }
 		})
 
 		if (user) {
-			throwError(E_EMAIL_EXSIST, 409)
+			throwError(STATUS.E_EMAIL_EXSIST, 409)
 		}
 
 		const profileImg = req.files?.profileImg
 		if (!profileImg) {
 			res.status(400)
-			throwError(E_MISSING_PROFILE_IMG, 400)
+			throwError(STATUS.E_MISSING_PROFILE_IMG, 400)
 		}
 
-		let fileExt = getFileExtension(profileImg.name)
-		if (fileExt !== PNG || fileExt !== JPEG || fileExt !== JPG)
-			throwError(E_FILE_TYPE_NOT_ALLOWED, 415)
+		let fileType = profileImg.mimetype
+
+		// console.log(fileType)
+		// if (
+		// 	fileType != CONSTS.PNG ||
+		// 	fileType != CONSTS.JPEG ||
+		// 	fileType != CONSTS.JPG
+		// ) {
+		// 	throwError(STATUS.E_FILE_TYPE_NOT_ALLOWED, 415)
+		// }
 
 		let hashedPassword = await hashPassword(password)
 
@@ -70,12 +61,12 @@ exports.addUser = async (req, res, next) => {
 			userName,
 			userEmail: emailId,
 			password: hashedPassword,
-			userType: employeeType === ADMIN ? ADMIN : EMPLOYEE, // 1 for admin user and 2 for employee user
+			userType: employeeType === CONSTS.ADMIN ? CONSTS.ADMIN : CONSTS.EMPLOYEE,
 			profilePicture: ""
 		})
 
 		if (!_createdUser) {
-			throwError(E_SIGN_UP, 424)
+			throwError(STATUS.E_SIGN_UP, 424)
 		}
 
 		let profileImgName = await saveProfileImage(profileImg, _createdUser.id)
@@ -85,7 +76,8 @@ exports.addUser = async (req, res, next) => {
 		await _createdUser.save()
 
 		return res.status(201).json({
-			message: S_CREATE_USER
+			success: true,
+			message: STATUS.S_CREATE_USER
 		})
 	} catch (error) {
 		next(error)
@@ -97,8 +89,9 @@ async function hashPassword(password) {
 }
 
 async function saveProfileImage(profileImg, userId) {
-	let path = PROFILE_IMG_PATH
-	if (!checkPathExsists(path)) {
+	let path = CONSTS.PROFILE_IMG_PATH
+
+	if (!fs.existsSync(path)) {
 		await fsPromises.mkdir(path, { recursive: true })
 	}
 
@@ -121,28 +114,30 @@ function getFileExtension(fileName) {
 	return fileName.split(".").pop()
 }
 
-function checkPathExsists(path) {
-	return fs.existsSync(path)
-}
-
 // ********************************************
 // GET EMPLOYEE COUNT
 // ********************************************
 
-exports.getEmployeeCount = async (req, res) => {
+exports.getEmployeeCount = async (req, res, next) => {
 	try {
 		let response = await UserModel.findAll({
 			attributes: [
 				[Sequelize.fn("COUNT", Sequelize.col("id")), "total_employees"]
-			]
+			],
+			raw: true
 		})
+
 		console.log(response)
+
 		res.status(200).json({
-			call: 1,
-			totalEmployees: response[0]
+			code: 200,
+			status: "success",
+			data: {
+				employeeCount: response[0]
+			}
 		})
 	} catch (error) {
-		returnError(res, error)
+		next(error)
 	}
 }
 
@@ -156,11 +151,11 @@ exports.getEmployeeList = async function (req, res, next) {
 			raw: true
 		})
 		return res.status(200).json({
-			call: 1,
+			status: "success",
 			data: employeeList
 		})
 	} catch (error) {
-		returnError(res, error)
+		next(error)
 	}
 }
 

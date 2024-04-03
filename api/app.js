@@ -23,7 +23,7 @@ app.use(cors())
 app.use(fileUpload())
 
 app.use(express.json())
-app.use(express.urlencoded({ extended: false }))
+// app.use(express.urlencoded({ extended: false }))
 
 app.use("/", indexRoutes)
 app.use(function (req, res) {
@@ -34,11 +34,25 @@ app.use(function (req, res) {
 })
 
 app.use((error, req, res, next) => {
-	res.status(error.code || 500).json({
-		status: error.code || 500,
-		message: error.message || "Something went wrong",
-		stack: error.stack || {}
-	})
+	if (error?.code === "ENOENT") {
+		error.status = 500
+		error.message = "Failed to save profile image"
+	}
+
+	if (process.env.PROJECT_ENV === "DEV") {
+		res.status(error.status || 500).json({
+			success: false,
+			error_status: error.status || 500,
+			message: error.message || "Something went wrong",
+			error_stack: process.env.PROJECT_ENV === "DEV" ? error.stack : {}
+		})
+	} else {
+		res.status(error.status || 500).json({
+			success: false,
+			error_status: error.status || 500,
+			message: error.message || "Something went wrong"
+		})
+	}
 })
 
 // sequelize associations
