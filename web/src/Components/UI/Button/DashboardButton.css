@@ -1,11 +1,11 @@
 .button--dashboard {
-	transition: 100ms all ease-out;
-	text-decoration: none;
-	transform-origin: top left;
-	box-shadow: 0 2px 5px 2px rgba(0, 0, 0, 0.2);
-	padding: 1.4em 1.4em;
-	color: #fff;
+  transition: 100ms all ease-out;
+  text-decoration: none;
+  transform-origin: top left;
+  box-shadow: 0 2px 5px 2px rgba(0, 0, 0, 0.2);
+  padding: 1.4em 1.4em;
+  color: #fff;
 }
 .button--dashboard:active {
-	transform: translateY(1px);
+  transform: translateY(1px);
 }

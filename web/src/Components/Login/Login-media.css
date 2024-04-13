@@ -1,11 +1,11 @@
 /* 500px */
 
 @media screen and (min-width: 31.25em) {
-	.loginContainer {
-		max-width: 40rem;
-	}
+  .loginContainer {
+    max-width: 40rem;
+  }
 
-	.loginFormInputContainer .input-element {
-		width: 30rem;
-	}
+  .loginFormInputContainer .input-element {
+    width: 30rem;
+  }
 }

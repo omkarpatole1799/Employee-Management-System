@@ -2,19 +2,19 @@
 }
 
 .projct-dropdown {
-	margin-bottom: 2.4rem;
+  margin-bottom: 2.4rem;
 }
 
 .log-description {
-	margin-bottom: 1.8rem;
+  margin-bottom: 1.8rem;
 }
 .log-description textarea {
-	width: 100%;
-	resize: none;
-	padding: 10px;
+  width: 100%;
+  resize: none;
+  padding: 10px;
 }
 
 .add-log-button-container {
-	display: flex;
-	justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
 }

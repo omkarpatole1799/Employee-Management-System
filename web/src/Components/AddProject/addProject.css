@@ -1,10 +1,10 @@
 .add-project-form-container {
-	display: flex;
-	flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .form-group {
-	display: flex;
-	flex-direction: column;
-	gap: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
 }

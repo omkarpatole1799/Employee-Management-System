@@ -1,21 +1,21 @@
-import React, { useState } from 'react'
+import React, { useState } from "react"
 
-import './alert.css'
+import "./alert.css"
 
 function Alert(props) {
-	const [alert, setAlert] = useState(true)
+  const [alert, setAlert] = useState(true)
 
-	setTimeout(() => {
-		setAlert(false)
-	}, 2500)
+  setTimeout(() => {
+    setAlert(false)
+  }, 2500)
 
-	return (
-		<>
-			{alert && (
-				<div className={alert ? 'alert show' : 'alert'}>{props.children}</div>
-			)}
-		</>
-	)
+  return (
+    <>
+      {alert && (
+        <div className={alert ? "alert show" : "alert"}>{props.children}</div>
+      )}
+    </>
+  )
 }
 
 export default Alert

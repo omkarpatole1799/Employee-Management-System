@@ -1,7 +1,7 @@
-export const AuthHeader = {
-	Authorization:
-		'Bearer ' +
-		localStorage.getItem('tocken') +
-		'  ' +
-		localStorage.getItem('userId')
+const headers = {
+  Authorization: `Bearer ${localStorage.getItem(
+    "tocken"
+  )} ${localStorage.getItem("userId")}`
 }
+
+export default headers
