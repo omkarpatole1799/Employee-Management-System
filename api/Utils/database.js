@@ -2,7 +2,7 @@ const Sequelize = require("sequelize")
 const dotenv = require("dotenv")
 dotenv.config()
 
-const sequelize = new Sequelize(
+const dbConn = new Sequelize(
   `${process.env.DB_NAME}`,
   `${process.env.DB_USER_ID}`,
   `${process.env.DB_PASS}`,
@@ -13,4 +13,11 @@ const sequelize = new Sequelize(
   }
 )
 
-module.exports = sequelize
+try {
+  await dbConn.authenticate()
+  console.log("DB CONNECTION SUCCESS")
+} catch (error) {
+  console.log("DB DONNECTION ERROR", error)
+}
+
+module.exports = dbConn
