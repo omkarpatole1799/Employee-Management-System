@@ -4,7 +4,7 @@
 
 # Login [POST]
 
-- IP/auth/login
+END_POINT - IP/auth/login
 
 ```
 -sendData: {
