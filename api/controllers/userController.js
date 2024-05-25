@@ -34,8 +34,8 @@ exports.postLogData = tryCatch(async (req, res) => {
   if (log == "" || !log || !projectTitle || projectTitle == "") {
     throw new AppError("Either log description or project title missing.", 400)
   }
-  const userId = req.userId
 
+  const userId = req.userId
   if (!userId) throw new AppError("Unauthorized", 401)
 
   const createLog = await UserLog.create(

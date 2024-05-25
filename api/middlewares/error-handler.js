@@ -9,7 +9,7 @@ const errorHandler = (error, req, res, next) => {
       success: false,
       error_status: error.statusCode || 500,
       message: error.message || "Something went wrong",
-      error_stack: process.env.PROJECT_ENV === "DEV" ? error.stack : {}
+      error_stack: error.stack
     })
   } else {
     res.status(error.status || 500).json({

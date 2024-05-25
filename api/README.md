@@ -30,3 +30,6 @@ END_POINT - IP/auth/login
   "token": <jwt_token> 
 }
 ```
+
+
+![alt text](image.png)

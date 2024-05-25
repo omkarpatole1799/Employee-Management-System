@@ -13,11 +13,5 @@ const dbConn = new Sequelize(
   }
 )
 
-try {
-  await dbConn.authenticate()
-  console.log("DB CONNECTION SUCCESS")
-} catch (error) {
-  console.log("DB DONNECTION ERROR", error)
-}
 
 module.exports = dbConn

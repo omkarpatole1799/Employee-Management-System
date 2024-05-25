@@ -1,6 +1,7 @@
-exports.throwError = (err, status) => {
+exports.throwError = (err, status = 500, error_code) => {
   let error = new Error(err)
   error.status = status
+  error.error_code = error_code
   throw error
 }
 
@@ -16,12 +17,8 @@ exports.sendSuccess = (
   })
 }
 
-exports.tryCatch = controller => async (req, res, next) => {
-  try {
-    await controller(req, res)
-  } catch (error) {
-    next(error)
+exports.tryCatch = controller => {
+  return (req, res, next) => {
+    controller(req, res, next).catch(err => next(err))
   }
 }
-
-
